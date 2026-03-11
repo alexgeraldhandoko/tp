@@ -2,8 +2,10 @@ package seedu.address.model.person;
 
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -26,6 +28,7 @@ public class Person {
     private final Address address;
     private final StartDate startDate;
     private final Set<Tag> tags = new HashSet<>();
+    private final List<RunTiming> runTimings = new ArrayList<>();
 
     /**
      * Every field must be present and not null.
@@ -71,6 +74,14 @@ public class Person {
      */
     public Set<Tag> getTags() {
         return Collections.unmodifiableSet(tags);
+    }
+
+    public List<RunTiming> getRunTimings() {
+        return Collections.unmodifiableList(runTimings);
+    }
+
+    public void addRunTiming(RunTiming timing) {
+        runTimings.add(timing);
     }
 
     /**
