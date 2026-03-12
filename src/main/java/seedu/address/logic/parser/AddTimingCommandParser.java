@@ -9,10 +9,28 @@ import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.RunTiming;
 
 /**
- * Parses input arguments and creates an AddTimingCommand.
+ * Parses user input arguments and creates an {@link AddTimingCommand}.
+ *
+ * <p>This parser extracts the athlete index and run timing parameters
+ * from the user input. It validates the presence and correctness of
+ * required fields before constructing the command.</p>
+ *
+ * <p>Expected command format:</p>
+ * <pre>
+ * addtiming INDEX min/MINUTES sec/SECONDS
+ * </pre>
  */
 public class AddTimingCommandParser implements Parser<AddTimingCommand> {
 
+    /**
+     * Parses the given {@code String} of arguments in the context of the
+     * {@code AddTimingCommand} and returns an {@code AddTimingCommand}.
+     *
+     * @param args Full command arguments string.
+     * @return A new {@code AddTimingCommand} containing the parsed values.
+     * @throws ParseException If the user input does not conform to the expected format
+     *                        or if the timing values are invalid.
+     */
     @Override
     public AddTimingCommand parse(String args) throws ParseException {
 
@@ -41,11 +59,34 @@ public class AddTimingCommandParser implements Parser<AddTimingCommand> {
                     "Invalid command format: addtiming INDEX min/MINUTES sec/SECONDS");
         }
 
+        RunTiming timing = getRunTiming(minutes, seconds);
+
+        return new AddTimingCommand(index, timing);
+    }
+
+    /**
+     * Validates the provided timing values and creates a {@link RunTiming} object.
+     *
+     * <p>This method ensures that:</p>
+     * <ul>
+     *     <li>Minutes are non-negative</li>
+     *     <li>Seconds are within the range {@code [0, 60)}</li>
+     *     <li>Total timing is greater than zero</li>
+     * </ul>
+     *
+     * @param minutes The minutes component of the run timing.
+     * @param seconds The seconds component of the run timing.
+     * @return A valid {@code RunTiming} object.
+     * @throws ParseException If any validation constraint is violated.
+     */
+    private static RunTiming getRunTiming(int minutes, double seconds) throws ParseException {
+
         // Prevent negative values
         if (minutes < 0) {
             throw new ParseException("Invalid minutes: must be a non-negative integer");
         }
 
+        // Ensure seconds fall within a valid range
         if (seconds < 0 || seconds >= 60) {
             throw new ParseException("Invalid seconds: must be between 0 and 59.99");
         }
@@ -55,8 +96,6 @@ public class AddTimingCommandParser implements Parser<AddTimingCommand> {
             throw new ParseException("Invalid timing: total time must be greater than 0");
         }
 
-        RunTiming timing = new RunTiming(minutes, seconds);
-
-        return new AddTimingCommand(index, timing);
+        return new RunTiming(minutes, seconds);
     }
 }
