@@ -179,7 +179,7 @@ Expected output:
 
 Examples:
 * `addathlete n/John Doe a/21 p/98765432 e/johnd@example.com ad/John street, block 123, #01-01 d/01/01/2001`
-* `addathlete n/Betsy Crowe a/19 t/friend e/betsycrowe@example.com ad/Newgate Street p/1234567 d/02/02/2002 t/professional`
+* `addathlete n/Betsy Crowe a/19 t/friend e/betsycrowe@example.com ad/Newgate Street p/81234567 d/02/02/2002 t/professional`
 
 Customized example:
 * To add a new sprinter from your club before a new training block:
