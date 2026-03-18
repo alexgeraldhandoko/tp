@@ -10,8 +10,17 @@ more than that. It helps you keep track of runners’ data, such as their timing
 contacts. It also allows you to find your athletes easily and monitor their improvements over time. So, whether you are 
 a private coach or training a professional running club, let Pacebook match your pace.
 
-* Table of Contents
-{:toc}
+## Table of Contents
+Section | Details
+--------|---------
+[Table of Contents](#table-of-contents) | This table provides the links to the various sections and their respective details 
+[Pacebook](#pacebook) | Product description of Pacebook
+[Quick Start](#quick-start) | Installation and set-up guide
+[Features](#features) | The list of Pacebook's features and how to use them 
+[FAQ](#features) | Frequently asked questions about Pacebook
+[Known issues](#known-issues) | Issues with Pacebook that were discovered or reported. Rest assured that we are working to fix them
+[Command Summary](#command-summary) | Summary of all Pacebook commands
+
 
 --------------------------------------------------------------------------------------------------------------------
 
