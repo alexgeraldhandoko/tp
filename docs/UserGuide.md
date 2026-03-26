@@ -3,8 +3,76 @@ layout: page
 title: User Guide
 ---
 
-AddressBook Level 3 (AB3) is a **desktop app for managing contacts, optimized for use via a Command Line Interface** (CLI) while still having the benefits of a Graphical User Interface (GUI). If you can type fast, AB3 can get your contact management tasks done faster than traditional GUI apps.
+## Pacebook
 
+At its core, Pacebook helps running coaches like you to manage your runners’ contacts effectively. But it's also much
+more than that. It helps you keep track of runners’ data, such as their timings, training sessions, and emergency
+contacts. It also allows you to find your athletes easily and monitor their improvements over time. So, whether you are
+a private coach or training a professional running club, let Pacebook match your pace.
+
+Pacebook is a **desktop application designed for running coaches to manage runners, training plans, and essential contact information efficiently**. It is optimized for use via a **Command Line Interface (CLI)**, enabling fast interaction while still providing a simple graphical interface.
+
+Unlike generic contact management tools, Pacebook is tailored specifically for **training environments**, where quick access to structured runner data is critical for planning and execution.
+
+---
+
+## Target Users
+
+Pacebook is designed primarily for:
+
+### Run Club Coaches
+- Coaches managing multiple runners within a team or club
+- Responsible for planning and monitoring training sessions
+- Require quick access to structured runner data
+
+---
+
+## Assumptions About Users
+
+Pacebook assumes that users:
+
+### Technical Assumptions
+- Have **basic computer literacy**
+- Are comfortable typing simple CLI commands (e.g. `add`, `edit`, `find`)
+- Do not require programming knowledge
+- Can understand structured input formats (e.g. `n/NAME`, `p/PHONE`)
+
+### Domain Assumptions
+Users are familiar with running-related training concepts, including:
+- Competition distances (e.g. 42km marathon)
+- Long run distances (e.g. 10km)
+- Interval training formats (e.g. 10 × 400m)
+
+### Usage Assumptions
+- Users prefer **efficiency and speed** over graphical-heavy systems
+- Users need to **quickly retrieve and update runner information**
+- Users manage **multiple runners simultaneously**
+- Users rely on structured data to **plan training sessions effectively**
+
+---
+
+## User Needs Addressed
+
+Pacebook is designed to support the following core needs:
+
+- Managing runners within a run club environment
+- Recording key training details such as:
+    - Competition distance (e.g. 42km)
+    - Long run (e.g. 10km)
+    - Interval training (e.g. 10 × 400m)
+- Sorting runners based on:
+    - Personal best
+    - Availability
+    - Club or team
+    - Alphabetical order
+- Adding and maintaining **emergency contact information**
+- Searching runners efficiently, including **partial keyword matching**
+- Updating runner details quickly using edit commands
+- Accessing available commands via a `help` function
+
+These features enable coaches to **plan training sessions more effectively, reduce administrative effort, and focus on improving runner performance**.
+
+---
 * Table of Contents
 {:toc}
 
@@ -12,31 +80,38 @@ AddressBook Level 3 (AB3) is a **desktop app for managing contacts, optimized fo
 
 ## Quick start
 
-1. Ensure you have Java `17` or above installed in your Computer.<br>
-   **Mac users:** Ensure you have the precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
+1. Ensure that Java `17` or above is installed on your computer.<br>
+   If you do not have Java installed, follow the installation guide for your operating system:
+    * **Windows:** [Java installation guide for Windows](https://se-education.org/guides/tutorials/javaInstallationWindows.html).
+    * **Mac:** [Java installation guide for Mac](https://se-education.org/guides/tutorials/javaInstallationMac.html).
+    * **Linux:** [Java installation guide for Linux](https://se-education.org/guides/tutorials/javaInstallationLinux.html).
 
-1. Download the latest `.jar` file from [here](https://github.com/se-edu/addressbook-level3/releases).
+2. Download the latest `.jar` file from [here](https://github.com/AY2526S2-CS2103T-W14-4/tp/releases).
 
-1. Copy the file to the folder you want to use as the _home folder_ for your AddressBook.
+3. Copy the file to the folder you want to use as the _home folder_ for Pacebook.
 
-1. Open a command terminal, `cd` into the folder you put the jar file in, and use the `java -jar addressbook.jar` command to run the application.<br>
-   A GUI similar to the below should appear in a few seconds. Note how the app contains some sample data.<br>
+4. Open a command terminal and run the application using the following commands:
+   ```
+   cd [home folder]
+   java -jar pacebook.jar
+   ```
+5. After a few seconds, the application window should appear, as shown below. The app includes sample data to help you get started.<br>
    ![Ui](images/Ui.png)
 
-1. Type the command in the command box and press Enter to execute it. e.g. typing **`help`** and pressing Enter will open the help window.<br>
+6. Type a command into the command box and press Enter to run it. For example, typing **`help`** and pressing Enter will open the help window.<br>
    Some example commands you can try:
 
-   * `list` : Lists all contacts.
+   * `list` : Lists all athletes.
 
-   * `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01` : Adds a contact named `John Doe` to the Address Book.
+   * `addathlete n/John Doe a/21 p/98765432 e/johnd@example.com ad/John street, block 123, #01-01 d/01/01/2001` : Adds an athlete named `John Doe` to Pacebook.
 
-   * `delete 3` : Deletes the 3rd contact shown in the current list.
+   * `deleteathlete 3` : Deletes the 3rd athlete shown in the current list.
 
-   * `clear` : Deletes all contacts.
+   * `clear` : Deletes all athletes.
 
    * `exit` : Exits the app.
 
-1. Refer to the [Features](#features) below for details of each command.
+7. See the [Features](#features) section below for the full list of commands and how to use them.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -46,107 +121,325 @@ AddressBook Level 3 (AB3) is a **desktop app for managing contacts, optimized fo
 
 **:information_source: Notes about the command format:**<br>
 
-* Words in `UPPER_CASE` are the parameters to be supplied by the user.<br>
-  e.g. in `add n/NAME`, `NAME` is a parameter which can be used as `add n/John Doe`.
+* Words in `UPPER_CASE` are values you need to provide.
+  For example, in `addathlete n/NAME`, `NAME` should be replaced with the athlete’s actual name, such as `addathlete n/John Doe`.
 
-* Items in square brackets are optional.<br>
-  e.g `n/NAME [t/TAG]` can be used as `n/John Doe t/friend` or as `n/John Doe`.
+* Items in square brackets are optional.
+  For example, `n/NAME [t/TAG]` can be used as `n/John Doe t/sprinter` or just `n/John Doe`.
 
-* Items with `…`​ after them can be used multiple times including zero times.<br>
-  e.g. `[t/TAG]…​` can be used as ` ` (i.e. 0 times), `t/friend`, `t/friend t/family` etc.
+* Items followed by `…` can be used multiple times, including zero times.
+  For example, `[t/TAG]…` can be omitted completely, or used as `t/teamA`, `t/teamA t/relay`, and so on.
 
-* Parameters can be in any order.<br>
-  e.g. if the command specifies `n/NAME p/PHONE_NUMBER`, `p/PHONE_NUMBER n/NAME` is also acceptable.
+* Parameters can be entered in any order unless otherwise stated.
+  For example, if the command format is `n/NAME p/PHONE_NUMBER`, then `p/PHONE_NUMBER n/NAME` also works.
 
-* Extraneous parameters for commands that do not take in parameters (such as `help`, `list`, `exit` and `clear`) will be ignored.<br>
-  e.g. if the command specifies `help 123`, it will be interpreted as `help`.
+* Extra words added to commands that do not take parameters, such as `help`, `list`, `exit`, and `clear`, will be ignored.
+  For example, `help 123` will still be read as `help`.
 
-* If you are using a PDF version of this document, be careful when copying and pasting commands that span multiple lines as space characters surrounding line-breaks may be omitted when copied over to the application.
+* If you are using a PDF version of this guide, be careful when copying commands that span multiple lines, since some spaces around line breaks may be lost when pasting.
 </div>
 
 ### Viewing help : `help`
 
-Shows a message explaining how to access the help page.
-
-![help message](images/helpMessage.png)
+Opens the help window.
 
 Format: `help`
 
+Expected output:
+* A help window opens with a summary of available commands.
 
-### Adding a person: `add`
+Tip:
+* Use `help` whenever you forget a command format instead of guessing the prefixes.
 
-Adds a person to the address book.
+Customized example:
+* Before adding a new athlete for the first time, type `help` to quickly confirm the required prefixes.
 
-Format: `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​`
+---
+
+### Adding an athlete : `addathlete`
+
+Adds a new athlete to Pacebook.
+
+Format: `addathlete n/NAME a/AGE p/PHONE_NUMBER e/EMAIL ad/ADDRESS d/START_DATE [t/TAG]…​`
 
 <div markdown="span" class="alert alert-primary">:bulb: **Tip:**
-A person can have any number of tags (including 0)
+An athlete can have any number of tags, including none.
 </div>
 
+Warnings:
+* All compulsory fields must be provided.
+* `AGE` must be valid according to the app’s accepted format.
+* `PHONE_NUMBER` and `EMAIL` must be valid.
+* Duplicate athletes may be rejected if they match an existing athlete’s identity.
+* Avoid using vague names such as `John` if you coach multiple athletes with similar names.
+
+Expected output:
+* A success message confirming that the athlete has been added.
+* The athlete appears in the athlete list.
+
 Examples:
-* `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01`
-* `add n/Betsy Crowe t/friend e/betsycrowe@example.com a/Newgate Prison p/1234567 t/criminal`
+* `addathlete n/John Doe a/21 p/98765432 e/johnd@example.com ad/John street, block 123, #01-01 d/01/01/2001`
+* `addathlete n/Betsy Crowe a/19 t/friend e/betsycrowe@example.com ad/Newgate Street p/81234567 d/02/02/2002 t/professional`
 
-### Listing all persons : `list`
+Customized example:
+* To add a new sprinter from your club before a new training block:
+    * `addathlete n/Alex Tan a/20 p/91234567 e/alex@example.com ad/10 Jurong West Ave 5 d/15/03/2024 t/sprinter t/teamA`
 
-Shows a list of all persons in the address book.
+---
+
+### Listing all athletes : `list`
+
+Lists all athletes currently stored in Pacebook.
 
 Format: `list`
 
-### Editing a person : `edit`
+Expected output:
+* All athletes currently stored in Pacebook are displayed.
 
-Edits an existing person in the address book.
+Tip:
+* Use `list` before commands like `viewathlete`, `edit`, and `deleteathlete` if you want to confirm the current athlete indices.
 
-Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`
+Customized example:
+* Before planning a weekly track session, type `list` to view all available athletes in one place.
 
-* Edits the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, …​
-* At least one of the optional fields must be provided.
-* Existing values will be updated to the input values.
-* When editing tags, the existing tags of the person will be removed i.e adding of tags is not cumulative.
-* You can remove all the person’s tags by typing `t/` without
-    specifying any tags after it.
+---
 
-Examples:
-*  `edit 1 p/91234567 e/johndoe@example.com` Edits the phone number and email address of the 1st person to be `91234567` and `johndoe@example.com` respectively.
-*  `edit 2 n/Betsy Crower t/` Edits the name of the 2nd person to be `Betsy Crower` and clears all existing tags.
+### Editing an athlete : `edit`
 
-### Locating persons by name: `find`
+Updates an existing athlete's details.
 
-Finds persons whose names contain any of the given keywords.
+Format: `edit INDEX [n/NAME] [a/AGE] [p/PHONE] [e/EMAIL] [ad/ADDRESS] [d/START_DATE] [t/TAG]…​`
 
-Format: `find KEYWORD [MORE_KEYWORDS]`
+* Edits the athlete at the specified `INDEX`.
+* The index refers to the index number shown in the displayed athlete list.
+* The index **must be a positive integer**: `1, 2, 3, …`
+* You must provide at least one field to edit.
+* Any field you include will replace the athlete’s current value for that field.
+* If you edit tags, the old tags will be replaced completely.
+* You can remove all of the athlete’s tags by typing `t/` without entering anything after it.
 
-* The search is case-insensitive. e.g `hans` will match `Hans`
-* The order of the keywords does not matter. e.g. `Hans Bo` will match `Bo Hans`
-* Only the name is searched.
-* Only full words will be matched e.g. `Han` will not match `Hans`
-* Persons matching at least one keyword will be returned (i.e. `OR` search).
-  e.g. `Hans Bo` will return `Hans Gruber`, `Bo Yang`
+Warnings:
+* Make sure you are editing the correct athlete index, especially after using `find`.
+* Editing tags replaces all existing tags, not just one of them.
 
-Examples:
-* `find John` returns `john` and `John Doe`
-* `find alex david` returns `Alex Yeoh`, `David Li`<br>
-  ![result for 'find alex david'](images/findAlexDavidResult.png)
-
-### Deleting a person : `delete`
-
-Deletes the specified person from the address book.
-
-Format: `delete INDEX`
-
-* Deletes the person at the specified `INDEX`.
-* The index refers to the index number shown in the displayed person list.
-* The index **must be a positive integer** 1, 2, 3, …​
+Expected output:
+* A success message showing the updated athlete details.
 
 Examples:
-* `list` followed by `delete 2` deletes the 2nd person in the address book.
-* `find Betsy` followed by `delete 1` deletes the 1st person in the results of the `find` command.
+* `edit 1 p/91234567 e/johndoe@example.com`
+* `edit 2 n/Betsy Crower t/`
+
+Customized example:
+* If an athlete changes phone number before race season:
+    * `edit 3 p/97654321`
+
+---
+
+### Finding athletes by name and/or tag and/or phone number: `find`
+
+Finds all persons whose names contain any of
+the specified name keywords (case-insensitive), whose tags contain any of the specified tag keywords
+(case-insensitive), or whose phone numbers contain any of the specified phone numbers
+
+Format: `find n/KEYWORD p/PHONE_NUMBER t/TAG t/ANOTHER_TAG t/ANOTHER_TAG ...`
+
+* The search is case-insensitive. e.g. `n/hans` will match `n/Hans`
+* The order of the search criteria does not matter. e.g. `n/Jessy t/captain` will match `t/captain n/Jessy`
+* Only full words will be matched. e.g. `Han` will not match `Hans`
+* Athletes must satisfy all the criteria (i.e. `AND` search).
+  e.g. `n/Alex t/Marathoner` will return only the athlete with the names Alex and tag Marathoner
+
+Warnings:
+* `find` does not search phone number, address, tags, or timing records.
+* If no athletes match, the list will be empty.
+
+Expected output:
+* Only athletes matching the given keywords are shown.
+
+Examples:
+* `find n/John`
+* `find n/alex t/sprinter`
+
+Customized example:
+* If you coach many athletes and want to pull up all athletes named Alex before an interval session:
+    * `find n/Alex`
+* If you coach many athletes and want to pull up all the sprinters in the team:
+    * `find t/sprinter`
+
+---
+
+### Deleting an athlete : `deleteathlete`
+
+Deletes an athlete from Pacebook.
+
+Format: `deleteathlete INDEX`
+
+* Deletes the athlete at the specified `INDEX`.
+* The index refers to the index number shown in the displayed athlete list.
+* The index **must be a positive integer**: `1, 2, 3, …`
+
+Warnings:
+* This action removes the athlete and their associated training data from the app.
+* Double-check the athlete index before deleting.
+
+Expected output:
+* A success message confirming which athlete was deleted.
+
+Examples:
+* `list` followed by `deleteathlete 2`
+* `find Betsy` followed by `deleteathlete 1`
+
+Customized example:
+* If a runner leaves the club and you no longer need their profile:
+    * `deleteathlete 4`
+
+---
+
+### Viewing an athlete profile and training records : `viewathlete`
+
+Displays an athlete’s profile and their training records.
+
+Format: `viewathlete INDEX`
+
+* Displays the athlete at the specified `INDEX`.
+* The index refers to the index number shown in the displayed athlete list.
+* The index must be a positive integer: `1, 2, 3, …`
+
+Expected output:
+* The selected athlete’s profile is shown.
+* Any stored run timings or training records for that athlete are shown below the profile details.
+
+Tip:
+* Use `viewathlete` after `find` to quickly inspect one athlete without scrolling through the full list.
+
+Examples:
+* `list` followed by `viewathlete 2`
+* `find Betsy` followed by `viewathlete 1`
+
+Customized example:
+* Before deciding an athlete’s race pace target, use:
+    * `viewathlete 2`
+      to review their details and recent timing history.
+
+---
+
+### Sorting athletes : `sort`
+
+Sorts the displayed athlete list by the specified field.
+
+Format: `sort by/FIELD [order/ORDER]`
+
+* Supported fields:
+    * `name`
+    * `pb`
+* Supported orders:
+    * `asc`
+    * `desc`
+* If `order/ORDER` is omitted, the default sort order is ascending.
+* Sorting is applied to the currently displayed athlete list.
+* For `pb`, athletes with no recorded timings will appear after athletes with recorded timings.
+
+Warnings:
+* `sort` only changes the display order of athletes. It does not modify any athlete data.
+* `pb` refers to the athlete’s personal best 2.4km timing based on recorded timing entries.
+* If no athletes are currently displayed, the command will have no visible effect.
+
+Expected output:
+* A success message confirming the field and order used for sorting.
+* The displayed athlete list is reordered accordingly.
+
+Examples:
+* `sort by/name`
+* `sort by/name order/desc`
+* `sort by/pb`
+* `sort by/pb order/desc`
+
+Customized example:
+* Before selecting runners for a fitness test review, type:
+    * `sort by/pb`
+      to see athletes ordered from fastest personal best to slowest.
+
+---
+
+### Adding a timing record : `addtiming`
+
+Adds a 2.4km timing record to an athlete.
+
+Format: `addtiming INDEX min/MINUTES sec/SECONDS`
+
+* Adds a timing record to the athlete at the specified `INDEX`.
+* The index refers to the index number shown in the displayed athlete list.
+* `INDEX` must be a positive integer: `1, 2, 3, …`
+* The running distance is fixed at **2.4km**.
+* `MINUTES` must be a non-negative integer.
+* `SECONDS` must be between `0` and `59.99`.
+* The total timing must be greater than `0`.
+
+Warnings:
+* This command records only **2.4km timings**.
+* If you enter `min/0 sec/0`, the command will be rejected.
+* If the same athlete has multiple timing records, make sure you add the new record to the correct athlete profile.
+
+Expected output:
+* A success message confirming that the timing was added.
+* If the new timing is the athlete’s fastest 2.4km timing so far, a **new personal best** message is also shown.
+
+Examples:
+* `list` followed by `addtiming 2 min/10 sec/30`
+* `find Betsy` followed by `addtiming 1 min/11 sec/45`
+
+Customized example:
+* After timing an athlete during a fitness test:
+    * `addtiming 3 min/9 sec/58`
+      This records a 2.4km timing of 9 min 58 s for athlete 3.
+
+---
+
+### Deleting a timing record : `deletetiming`
+
+Deletes a timing record from an athlete’s profile.
+
+Format: `deletetiming ATHLETE_INDEX RECORD_INDEX`
+
+* Deletes the timing record at `RECORD_INDEX` for the athlete at `ATHLETE_INDEX`.
+* `ATHLETE_INDEX` refers to the index number shown in the displayed athlete list.
+* `RECORD_INDEX` refers to the index number shown in the displayed training records.
+* Both `ATHLETE_INDEX` and `RECORD_INDEX` must be positive integers: `1, 2, 3, …`
+
+Warnings:
+* Make sure you check the athlete profile with `viewathlete` first so that you delete the correct timing record.
+* Deleting a timing record may affect the athlete’s visible performance history.
+
+Expected output:
+* A success message confirming that the selected timing record was deleted.
+
+Examples:
+* `list`, followed by `viewathlete 2` and `deletetiming 2 2`
+* `find Betsy`, followed by `viewathlete 1` and `deletetiming 1 2`
+
+Customized example:
+* If a timing was entered incorrectly after a training session:
+    * `deletetiming 3 1`
+
+---
 
 ### Clearing all entries : `clear`
 
-Clears all entries from the address book.
+Clears all athletes from Pacebook.
 
 Format: `clear`
+
+Warnings:
+* This removes all athletes currently stored in the app.
+* Use this only if you are sure you want to wipe the current dataset.
+
+Expected output:
+* All athletes are removed from the list.
+
+Tip:
+* Avoid using `clear` if you only want to remove one athlete. Use `deleteathlete` instead.
+
+---
 
 ### Exiting the program : `exit`
 
@@ -154,35 +447,50 @@ Exits the program.
 
 Format: `exit`
 
+Expected output:
+* The application closes.
+
+Tip:
+* There is no need to save manually before exiting because Pacebook saves automatically after successful changes.
+
+---
+
 ### Saving the data
 
-AddressBook data are saved in the hard disk automatically after any command that changes the data. There is no need to save manually.
+Pacebook saves your data automatically whenever a command changes it, so you do not need to save manually.
+
+Expected output:
+* No separate save confirmation may be shown, but your data will be written to the data file after successful commands.
+
+Tip:
+* Close the application normally using `exit` to reduce the risk of interrupted file writes.
+
+---
 
 ### Editing the data file
 
-AddressBook data are saved automatically as a JSON file `[JAR file location]/data/addressbook.json`. Advanced users are welcome to update data directly by editing that data file.
+Pacebook stores its data as a JSON file at `[JAR file location]/data/addressbook.json`. Advanced users can edit this file directly if needed.
 
 <div markdown="span" class="alert alert-warning">:exclamation: **Caution:**
-If your changes to the data file makes its format invalid, AddressBook will discard all data and start with an empty data file at the next run. Hence, it is recommended to take a backup of the file before editing it.<br>
-Furthermore, certain edits can cause the AddressBook to behave in unexpected ways (e.g., if a value entered is outside of the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
+If your changes corrupt the data file, Pacebook may discard unreadable data or fail to load it correctly the next time it runs. It is strongly recommended to back up the file before editing it manually.
+Furthermore, certain edits can cause Pacebook to behave in unexpected ways if values are outside the accepted format. Edit the data file only if you are confident that you can update it correctly.
 </div>
 
-### Archiving data files `[coming in v2.0]`
-
-_Details coming soon ..._
+Tip:
+* Manual file editing is meant for advanced users only. Most users should use the app commands instead.
 
 --------------------------------------------------------------------------------------------------------------------
 
 ## FAQ
 
 **Q**: How do I transfer my data to another Computer?<br>
-**A**: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous AddressBook home folder.
+**A**: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous Pacebook home folder.
 
 --------------------------------------------------------------------------------------------------------------------
 
 ## Known issues
 
-1. **When using multiple screens**, if you move the application to a secondary screen, and later switch to using only the primary screen, the GUI will open off-screen. The remedy is to delete the `preferences.json` file created by the application before running the application again.
+1. **When using multiple screens**, if you move the application to a secondary screen, and later switch to using only the primary screen, the application window will open off-screen. The solution is to delete the `preferences.json` file created by the application before running the application again.
 2. **If you minimize the Help Window** and then run the `help` command (or use the `Help` menu, or the keyboard shortcut `F1`) again, the original Help Window will remain minimized, and no new Help Window will appear. The remedy is to manually restore the minimized Help Window.
 
 --------------------------------------------------------------------------------------------------------------------
@@ -191,10 +499,13 @@ _Details coming soon ..._
 
 Action | Format, Examples
 --------|------------------
-**Add** | `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 t/friend t/colleague`
+**AddAthlete** | `addathlete n/NAME a/AGE p/PHONE_NUMBER e/EMAIL ad/ADDRESS d/START_DATE [t/TAG]…​` <br> e.g., `addathlete n/James Ho a/30 p/82224444 e/jamesho@example.com ad/123, Clementi Rd, 1234665 d/03/03/2003 t/friend t/colleague`
+**AddTiming** | `addtiming INDEX min/MINUTES sec/SECONDS`<br> e.g., `addtiming 2 min/10 sec/30`
 **Clear** | `clear`
-**Delete** | `delete INDEX`<br> e.g., `delete 3`
-**Edit** | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
+**DeleteAthlete** | `deleteathlete INDEX`<br> e.g., `deleteathlete 3`
+**DeleteTiming** | `deletetiming ATHLETE_INDEX RECORD_INDEX`<br> e.g., `deletetiming 2 2`
+**Edit** | `edit INDEX [n/NAME] [a/AGE] [p/PHONE_NUMBER] [e/EMAIL] [ad/ADDRESS] [d/START_DATE] [t/TAG]…​`<br> e.g., `edit 2 n/James Lee e/jameslee@example.com`
 **Find** | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
 **List** | `list`
 **Help** | `help`
+**ViewAthlete** | `viewathlete INDEX`<br> e.g., `viewathlete 3`

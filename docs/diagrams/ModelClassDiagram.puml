@@ -4,23 +4,34 @@ skinparam arrowThickness 1.1
 skinparam arrowColor MODEL_COLOR
 skinparam classBackgroundColor MODEL_COLOR
 
-Package Model as ModelPackage <<Rectangle>>{
-Class "<<interface>>\nReadOnlyAddressBook" as ReadOnlyAddressBook
-Class "<<interface>>\nReadOnlyUserPrefs" as ReadOnlyUserPrefs
-Class "<<interface>>\nModel" as Model
-Class AddressBook
-Class ModelManager
-Class UserPrefs
+Package Model as ModelPackage <<Rectangle>> {
+    Class "<<interface>>\nReadOnlyAddressBook" as ReadOnlyAddressBook
+    Class "<<interface>>\nReadOnlyUserPrefs" as ReadOnlyUserPrefs
+    Class "<<interface>>\nModel" as Model
+    Class AddressBook
+    Class ModelManager
+    Class UserPrefs
 
-Class UniquePersonList
-Class Person
-Class Address
-Class Email
-Class Name
-Class Phone
-Class Tag
+    Class UniquePersonList
+    Class Person
+    Class Address
+    Class Age
+    Class Email
+    Class Name
+    Class Phone
+    Class RunTiming {
+        distance
+        minutes
+        seconds
+    }
+    Class StartDate
+    Class Tag
 
-Class I #FFFFFF
+    Class NameContainsKeywordsPredicate
+    Class PhoneContainsKeywordsPredicate
+    Class TagContainsKeywordsPredicate
+
+    Class I #FFFFFF
 }
 
 Class HiddenOutside #FFFFFF
@@ -38,17 +49,28 @@ UserPrefs .up.|> ReadOnlyUserPrefs
 AddressBook *--> "1" UniquePersonList
 UniquePersonList --> "~* all" Person
 Person *--> Name
+Person *--> Age
 Person *--> Phone
 Person *--> Email
 Person *--> Address
+Person *--> StartDate
 Person *--> "*" Tag
+Person *--> "*" RunTiming : stores
 
 Person -[hidden]up--> I
 UniquePersonList -[hidden]right-> I
 
-Name -[hidden]right-> Phone
+Name -[hidden]right-> Age
+Age -[hidden]right-> Phone
 Phone -[hidden]right-> Address
 Address -[hidden]right-> Email
+Email -[hidden]right-> StartDate
+StartDate -[hidden]right-> Tag
+Tag -[hidden]right-> RunTiming
 
 ModelManager --> "~* filtered" Person
+
+NameContainsKeywordsPredicate ..> Person
+PhoneContainsKeywordsPredicate ..> Person
+TagContainsKeywordsPredicate ..> Person
 @enduml

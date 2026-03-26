@@ -8,11 +8,16 @@ import java.util.Set;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.StringUtil;
+import seedu.address.logic.commands.SortCommand;
+import seedu.address.logic.commands.SortCommand.SortField;
+import seedu.address.logic.commands.SortCommand.SortOrder;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Address;
+import seedu.address.model.person.Age;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
+import seedu.address.model.person.StartDate;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -48,6 +53,21 @@ public class ParserUtil {
             throw new ParseException(Name.MESSAGE_CONSTRAINTS);
         }
         return new Name(trimmedName);
+    }
+
+    /**
+     * Parses a {@code String age} into an {@code Age}.
+     * Leading and trailing whitespaces will be trimmed.
+     *
+     * @throws ParseException if the given {@code age} is invalid.
+     */
+    public static Age parseAge(String age) throws ParseException {
+        requireNonNull(age);
+        String trimmedAge = age.trim();
+        if (!Age.isValidAge(trimmedAge)) {
+            throw new ParseException(Age.MESSAGE_CONSTRAINTS);
+        }
+        return new Age(trimmedAge);
     }
 
     /**
@@ -96,6 +116,21 @@ public class ParserUtil {
     }
 
     /**
+     * Parses a {@code String startDate} into a {@code StartDate}.
+     * Leading and trailing whitespaces will be trimmed.
+     *
+     * @throws ParseException if the given {@code startDate} is invalid.
+     */
+    public static StartDate parseStartDate(String startDate) throws ParseException {
+        requireNonNull(startDate);
+        String trimmedStartDate = startDate.trim();
+        if (!StartDate.isValidStartDate(trimmedStartDate)) {
+            throw new ParseException(StartDate.MESSAGE_CONSTRAINTS);
+        }
+        return new StartDate(trimmedStartDate);
+    }
+
+    /**
      * Parses a {@code String tag} into a {@code Tag}.
      * Leading and trailing whitespaces will be trimmed.
      *
@@ -120,5 +155,43 @@ public class ParserUtil {
             tagSet.add(parseTag(tagName));
         }
         return tagSet;
+    }
+
+    /**
+     * Parses a {@code String sortField} into a {@code SortField}.
+     * Leading and trailing whitespaces will be trimmed.
+     *
+     * @throws ParseException if the given {@code sortField} is invalid.
+     */
+    public static SortField parseBy(String sortField) throws ParseException {
+        requireNonNull(sortField);
+        String trimmedSortField = sortField.trim().toLowerCase();
+        switch (trimmedSortField) {
+        case "name":
+            return SortCommand.SortField.NAME;
+        case "pb":
+            return SortCommand.SortField.PB;
+        default:
+            throw new ParseException(SortCommand.MESSAGE_USAGE);
+        }
+    }
+
+    /**
+     * Parses a {@code String sortOrder} into a {@code SortOrder}.
+     * Leading and trailing whitespaces will be trimmed.
+     *
+     * @throws ParseException if the given {@code sortOrder} is invalid.
+     */
+    public static SortOrder parseOrder(String sortOrder) throws ParseException {
+        requireNonNull(sortOrder);
+        String trimmedSortOrder = sortOrder.trim().toLowerCase();
+        switch (trimmedSortOrder) {
+        case "asc":
+            return SortCommand.SortOrder.ASC;
+        case "desc":
+            return SortCommand.SortOrder.DESC;
+        default:
+            throw new ParseException(SortCommand.MESSAGE_USAGE);
+        }
     }
 }
