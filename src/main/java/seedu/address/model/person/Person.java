@@ -116,8 +116,8 @@ public class Person {
         return address;
     }
 
-    public EmergencyContact getEmergencyContact() { 
-        return emergencyContact; 
+    public EmergencyContact getEmergencyContact() {
+        return emergencyContact;
     }
 
     /**
