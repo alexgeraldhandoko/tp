@@ -1,6 +1,7 @@
 ---
 layout: page
 title: User Guide
+toc: true
 ---
 
 ## Pacebook
@@ -14,8 +15,7 @@ So, whether you manage a competitive squad or a casual running group, **let Pace
 Pacebook is a **desktop application designed for running coaches to manage runners, training plans,
 and essential contact information efficiently**. It is optimised for use via a **Command Line Interface (CLI)**, enabling fast interaction while still providing a simple graphical interface.
 
----
-## Table of Contents
+* Table of Contents
 {:toc}
 
 --------------------------------------------------------------------------------------------------------------------
