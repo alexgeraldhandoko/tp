@@ -28,32 +28,40 @@ You do not need to know how to program — just install it once using the links 
 1. Ensure that Java `17` or above is installed on your computer.<br>
 <div markdown="block" class="alert alert-info">
 **Checking if you have Java installed** <br>
+
 1. Open a command terminal
-2. Type the following command and press enter:
-  ```
-  java -version
-  ```
-  If Java has been installed properly, you will see the Java version will be printed. <br>
-  For example:
 
-  ```
-  openjdk version "17.0.12" 2024-07-16
-  ```
-  or
-  ```
-  java version "17.0.9" 2023-10-17 LTS
-  ```
+2. Type the following command and press Enter:
 
-  If Java is not installed, you may see something like:
-  ```
-  'java' is not recognized as an internal or external command
-  ```
-  or
-  ```
-  command not found: java
-  ```
-  </div>
+   ```
+   java -version
+   ```
 
+   If Java is installed correctly, you should see the installed Java version displayed.  
+   For example:
+
+   ```
+   openjdk version "17.0.12" 2024-07-16
+   ```
+
+   or
+
+   ```
+   java version "17.0.9" 2023-10-17 LTS
+   ```
+
+   If Java is not installed, you may see an error such as:
+
+   ```
+   'java' is not recognized as an internal or external command
+   ```
+
+   or
+
+   ```
+   command not found: java
+   ```
+  
   If you do not have Java installed, follow the installation guide for your operating system:
   - **Windows:** [Java installation guide for Windows](https://se-education.org/guides/tutorials/javaInstallationWindows.html).
   - **Mac:** [Java installation guide for Mac](https://se-education.org/guides/tutorials/javaInstallationMac.html).
@@ -186,7 +194,7 @@ ad/Blk 12 Jurong West Ave 1, #05-12 d/01/04/2025 t/sprinter t/teamA`
 Duplicate athletes may be rejected if an athlete with the **same phone number** already exists in Pacebook.
 </div>
 
-<div markdown="block" class="alert alert-success">:white_check_mark: **Expected output:**
+<div markdown="block" class="alert alert-success">✅ **Expected output:**
 
 - A success message confirming that the athlete has been added.
 - The athlete appears in the athlete list.
@@ -224,7 +232,7 @@ Example:
 * Editing tags replaces all existing tags, not just one of them.
 </div>
 
-<div markdown="block" class="alert alert-success">:white_check_mark: **Expected output:**
+<div markdown="block" class="alert alert-success">✅**Expected output:**
 
 * A success message showing the updated athlete details.
 </div>
@@ -266,7 +274,7 @@ Examples:
 * If no athletes match, the list will be empty.
 </div>
 
-<div markdown="block" class="alert alert-success">:white_check_mark: **Expected output:**
+<div markdown="block" class="alert alert-success">✅ **Expected output:**
 
 Only athletes matching the given keywords are shown.
 </div>
@@ -283,7 +291,7 @@ Example:
 * Pulling up the full roster to confirm who is registered as a trainee under you:
   * `list`
 
-<div markdown="block" class="alert alert-success">:white_check_mark: **Expected output:**
+<div markdown="block" class="alert alert-success">✅ **Expected output:**
 
 All athletes currently stored in Pacebook are displayed.
 </div>
@@ -332,7 +340,7 @@ Examples:
 * If no athletes are currently displayed, the command will have no visible effect.
 </div>
 
-<div markdown="block" class="alert alert-success">:white_check_mark: **Expected output:**
+<div markdown="block" class="alert alert-success">✅ **Expected output:**
 
 * A success message confirming the field and order used for sorting.
 * The displayed athlete list is reordered accordingly.
@@ -360,7 +368,7 @@ Example:
 * Use `view` after `find` to quickly inspect one athlete without scrolling through the full list.
 </div>
 
-<div markdown="block" class="alert alert-success">:white_check_mark: **Expected output:**
+<div markdown="block" class="alert alert-success">✅ **Expected output:**
 
 * The selected athlete’s profile is shown.
 * Any stored run timings or training records for that athlete are shown below the profile details.
@@ -400,7 +408,7 @@ Examples:
 * If the same athlete has multiple timing records, make sure you add the new record to the correct athlete profile.
 </div>
 
-<div markdown="block" class="alert alert-success">:white_check_mark: **Expected output:**
+<div markdown="block" class="alert alert-success">✅ **Expected output:**
 
 * A success message confirming that the timing was added.
 * If the new timing is the athlete’s fastest timing so far, a **new personal best** message is also shown.
@@ -426,13 +434,13 @@ Example:
 * The index **must be a positive number**: `1, 2, 3, …`
 </div>
 
-<div markdown="block" class="alert alert-danger">:rotating_lights: **Warning:**
+<div markdown="block" class="alert alert-danger">⚠️ **Warning:**
 
 This action removes the athlete and their associated training data from the app.
 Please double-check the athlete index in the display list before deleting.
 </div>
 
-<div markdown="block" class="alert alert-success">:white_check_mark: **Expected output:**
+<div markdown="block" class="alert alert-success">✅ **Expected output:**
 
 A success message confirming which athlete was deleted.
 </div>
@@ -466,7 +474,7 @@ Example:
 * Deleting a timing record may affect the athlete’s visible performance history.
 </div>
 
-<div markdown="block" class="alert alert-success">:white_check_mark: **Expected output:**
+<div markdown="block" class="alert alert-success">✅ **Expected output:**
 
 A success message confirming that the selected timing record was deleted.
 </div>
@@ -484,7 +492,7 @@ Example:
   new squad and need to wipe the previous cohort's data:
   * `clear`
 
-<div markdown="block" class="alert alert-danger">:rotating_lights: **Warning:**
+<div markdown="block" class="alert alert-danger">⚠️ **Warning:**
 
 * This removes all athletes currently stored in the app.
 * Use this only if you are sure you want to wipe the current dataset.
@@ -495,7 +503,7 @@ Example:
 * Avoid using `clear` if you only want to remove one athlete. Use `del` instead.
 </div>
 
-<div markdown="block" class="alert alert-success">:white_check_mark: **Expected output:**
+<div markdown="block" class="alert alert-success">✅ **Expected output:**
 
 * All athletes are removed from the list.
 </div>
@@ -513,7 +521,7 @@ Format: `help`
 Use `help` whenever you forget a command format instead of guessing the prefixes.
 </div>
 
-<div markdown="block" class="alert alert-success">:white_check_mark: **Expected output:**
+<div markdown="block" class="alert alert-success">✅ **Expected output:**
 
 A help window opens with a summary of available commands.
 </div>
@@ -526,7 +534,7 @@ Exits the program.
 
 Format: `exit`
 
-<div markdown="block" class="alert alert-success">:white_check_mark: **Expected output:**
+<div markdown="block" class="alert alert-success">✅ **Expected output:**
 
 The application closes.
 </div>
