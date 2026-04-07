@@ -175,7 +175,7 @@ These needs are built around the pace and demands of a real club coaching workfl
 
 Adds a new athlete to Pacebook.
 
-Format: `add n/NAME a/AGE p/PHONE e/EMAIL ad/ADDRESS d/START_DATE [t/TAG]… [av/AVAILABLE_DAY]…​`
+Format: `add n/NAME a/AGE p/PHONE e/EMAIL ad/ADDRESS d/START_DATE [ec/EMERGENCY_CONTACT] [t/TAG]… [av/AVAILABLE_DAY]…​`
 
 Example:
 * A new sprinter joins your team A after the open trial session:
@@ -188,6 +188,7 @@ Example:
 - `AGE` must be a number between 10-99.
 - `PHONE_NUMBER` must be a valid Singapore phone number (i.e. 8 digits, starts with 8 or 9).
 - `EMAIL` must be a valid email, i.e. email@domain.
+- `EMERGENCY_CONTACT` can be any non-blank text, e.g. a name and number like `Jane Doe 91234567`. If omitted, it defaults to `N/A`.
 - Avoid using vague names such as `John` if you coach multiple athletes with similar names.
 </div>
 
@@ -206,7 +207,7 @@ Duplicate athletes may be rejected if an athlete with the **same phone number** 
 
 Updates an existing athlete's details.
 
-Format: `edit INDEX [n/NAME] [a/AGE] [p/PHONE] [e/EMAIL] [ad/ADDRESS] [d/START_DATE] [t/TAG]… [av/AVAILABLE_DAY]…​`
+Format: `edit INDEX [n/NAME] [a/AGE] [p/PHONE] [e/EMAIL] [ad/ADDRESS] [d/START_DATE] [ec/EMERGENCY_CONTACT] [t/TAG]… [av/AVAILABLE_DAY]…​`
 Edits the athlete at the specified `INDEX`.
 
 Example:
@@ -592,8 +593,8 @@ Furthermore, certain edits can cause Pacebook to behave in unexpected ways if va
 
 | Action             | Format, Examples                                                                                                                                                                                                                       |
 |--------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Add Athlete**    | `add n/NAME a/AGE p/PHONE e/EMAIL ad/ADDRESS d/START_DATE [t/TAG]… [av/AVAILABLE_DAY]…​` <br> e.g., `add n/Sarah Tan a/24 p/91234567 e/sarah.tan@email.com ad/Blk 12 Jurong West Ave 1, #05-12 d/01/04/2025 t/sprinter t/teamA` |
-| **Edit**           | `edit INDEX [n/NAME] [a/AGE] [p/PHONE] [e/EMAIL] [ad/ADDRESS] [d/START_DATE] [t/TAG]… [av/AVAILABLE_DAY]…​`<br> e.g., `edit 1 n/Marcus Lim e/marcus@email.com`                                                                         |
+| **Add Athlete**    | `add n/NAME a/AGE p/PHONE e/EMAIL ad/ADDRESS d/START_DATE [ec/EMERGENCY_CONTACT] [t/TAG]… [av/AVAILABLE_DAY]…​` <br> e.g., `add n/Sarah Tan a/24 p/91234567 e/sarah.tan@email.com ad/Blk 12 Jurong West Ave 1, #05-12 d/01/04/2025 t/sprinter t/teamA` |
+| **Edit**           | `edit INDEX [n/NAME] [a/AGE] [p/PHONE] [e/EMAIL] [ad/ADDRESS] [d/START_DATE] [ec/EMERGENCY_CONTACT] [t/TAG]… [av/AVAILABLE_DAY]…​`<br> e.g., `edit 1 n/Marcus Lim e/marcus@email.com`                                                   |
 | **Find**           | `find [n/NAME] [p/PHONE] [t/TAG] [av/AVAILABLE_DAY]`<br> e.g., `find n/Sarah t/sprinter`                                                                                                                                               |
 | **List**           | `list`                                                                                                                                                                                                                                 |
 | **Sort**           | `sort by/FIELD [ord/ORDER]` <br> e.g., `sort by/pb ord/desc`                                                                                                                                                                           |
