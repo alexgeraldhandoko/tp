@@ -3,6 +3,7 @@ package seedu.address.logic.commands;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_AGE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_AVAILABLE_DAY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
@@ -18,9 +19,9 @@ import seedu.address.model.person.Person;
 /**
  * Adds a person to the address book.
  */
-public class AddCommand extends Command {
+public class AddAthleteCommand extends Command {
 
-    public static final String COMMAND_WORD = "addathlete";
+    public static final String COMMAND_WORD = "add";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Adds a person to the address book. "
             + "Parameters: "
@@ -31,6 +32,7 @@ public class AddCommand extends Command {
             + PREFIX_ADDRESS + "ADDRESS "
             + PREFIX_START_DATE + "START DATE "
             + "[" + PREFIX_TAG + "TAG]...\n"
+            + "[" + PREFIX_AVAILABLE_DAY + "AVAILABLE DAY]...\n"
             + "Example: " + COMMAND_WORD + " "
             + PREFIX_NAME + "John Doe "
             + PREFIX_AGE + "18 "
@@ -39,7 +41,9 @@ public class AddCommand extends Command {
             + PREFIX_ADDRESS + "311, Clementi Ave 2, #02-25 "
             + PREFIX_START_DATE + "06/03/2026 "
             + PREFIX_TAG + "friends "
-            + PREFIX_TAG + "owesMoney";
+            + PREFIX_TAG + "owesMoney "
+            + PREFIX_AVAILABLE_DAY + "Mon "
+            + PREFIX_AVAILABLE_DAY + "Wed";
 
     public static final String MESSAGE_SUCCESS = "New person added: %1$s";
     public static final String MESSAGE_DUPLICATE_PERSON = "This person already exists in the address book";
@@ -47,9 +51,9 @@ public class AddCommand extends Command {
     private final Person toAdd;
 
     /**
-     * Creates an AddCommand to add the specified {@code Person}
+     * Creates an AddAthleteCommand to add the specified {@code Person}
      */
-    public AddCommand(Person person) {
+    public AddAthleteCommand(Person person) {
         requireNonNull(person);
         toAdd = person;
     }
@@ -73,11 +77,11 @@ public class AddCommand extends Command {
         }
 
         // instanceof handles nulls
-        if (!(other instanceof AddCommand)) {
+        if (!(other instanceof AddAthleteCommand)) {
             return false;
         }
 
-        AddCommand otherAddCommand = (AddCommand) other;
+        AddAthleteCommand otherAddCommand = (AddAthleteCommand) other;
         return toAdd.equals(otherAddCommand.toAdd);
     }
 

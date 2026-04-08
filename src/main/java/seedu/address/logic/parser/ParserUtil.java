@@ -18,6 +18,7 @@ import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
 import seedu.address.model.person.StartDate;
+import seedu.address.model.person.availableday.AvailableDay;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -155,6 +156,38 @@ public class ParserUtil {
             tagSet.add(parseTag(tagName));
         }
         return tagSet;
+    }
+
+    /**
+     * Parses a {@code String availableday} into an {@code AvailableDay}.
+     * Leading and trailing whitespaces will be trimmed.
+     *
+     * @throws ParseException if the given {@code availableday} is invalid.
+     */
+    public static AvailableDay parseAvailableDay(String availableDay) throws ParseException {
+        requireNonNull(availableDay);
+        String trimmedAvailableDay = availableDay.trim();
+        if (!AvailableDay.isValidDay(trimmedAvailableDay)) {
+            throw new ParseException(AvailableDay.MESSAGE_CONSTRAINTS);
+        }
+        return new AvailableDay(trimmedAvailableDay);
+    }
+
+    /**
+     * Parses {@code Collection<String> availableDays} into a {@code Set<AvailableDay>}.
+     */
+    public static Set<AvailableDay> parseAvailableDays(Collection<String> days) throws ParseException {
+        requireNonNull(days);
+        final Set<AvailableDay> availableDays = new HashSet<>();
+        for (String day : days) {
+            AvailableDay availableDay = parseAvailableDay(day);
+            if (availableDays.contains(availableDay)) {
+                throw new ParseException(AvailableDay.MESSAGE_DUPLICATE_AVAILABLE_DAYS);
+            }
+
+            availableDays.add(availableDay);
+        }
+        return availableDays;
     }
 
     /**
