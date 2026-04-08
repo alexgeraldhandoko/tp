@@ -840,6 +840,574 @@ testers are expected to do more *exploratory* testing.
        `The person index provided is invalid`
        
 ### Find athletes
+***Note:*** 
+Find athlete commands are meant to be done to pick out a smaller subset of athletes from a larger subset.
+
+Thus, all the find athlete tests have the following common prerequisite:
+
+Prerequisite: Multiple contacts are present in the address book. For convenience, use the sample addressbook.json above
+
+All the find athlete tests also have the following common expected result from running the test command:
+
+Expected: The result display should display number of persons listed.
+
+1. Find athlete by name
+
+    1. Test case: `find n/Irfan`
+       Expected: Only athletes whose name contains `Irfan` or any other chosen keyword should appear in the person list panel.
+
+
+1. Find athlete by phone number
+
+    1. Find athlete by full phone number
+       Test case: `find p/92492021` if using sample addressbook.json or `find p/x`, where x is any full and valid phone number
+       Expected: Only one athlete with the chosen phone number should appear in the person list panel.
+
+    1. Find athlete by partial phone number
+       Test case: `find p/92` if using sample addressbook.json or `find p/x`, where x is any partial phone number
+       Expected: All athletes whose phone number contains `x` as the prefix to their phone number, and only these athletes, should appear in the person list panel. 
+
+
+1. Find athlete by a tag
+    
+    1. Finding athlete using an all-lowercase tag in the command 
+       Test case: `find t/classmates` if using sample addressbook.json or `find t/TAG`, where TAG could be any tag keyword.
+       Expected: All athletes that have the specified tag, and no other athlete besides these, should appear in the contact list.
+
+    2. Finding athlete using a mixed-case tag in the command
+       Test case: `find t/cLaSsMaTeS`
+       Expected: All athletes that have the specified tag, and no other athlete besides these, should appear in the contact list.
+
+
+1. Find athlete by combination of tags
+
+    1. Test case: `find t/classmates t/colleagues` when using the addressbook.json sample, or `find t/TAG1 t/TAG2 ...`
+       Expected: All athletes that have at least one of the specified tags, and no other athlete besides these, should appear in the contact list.
+
+
+1. Find athlete by combination of tags and full phone number
+
+    1. Test case: `find t/classmates p/924`
+       Expected: All athletes that have at least one of the specified tags and the partial phone number, and no other athlete besides these, should appear in the contact list.
+
+
+1. Find a non-existent athlete by a non-existent name
+
+    1. Test case: `find n/Jerry` if using the addressbook.json sample, or `find n/x`, where x is a word that doesn't appear in any of the contact list names
+       Expected: No athlete should be displayed on the person list panel.
+
+
+1. Find an athlete with invalid command format
+
+    1. Test case: `find q/Irfan`
+       Expected: The following error message should be displayed in the result display:
+       ```
+       Invalid command format! 
+       find: Finds all persons whose names contain any of the specified name keywords (case-insensitive), whose tags contain any of the specified tag keywords (case-insensitive), or whose phone numbers contain any of the specified phone numbers and displays them as a list with index numbers.
+       Parameters: n/KEYWORD p/PHONE_NUMBER t/TAG t/ANOTHER_TAG t/ANOTHER_TAG av/AVAILABLE_DAY ...
+       Example: find n/jessy p/91234567 t/captain t/sprinter av/Mon
+       ```
+
+### Add run timings
+***Note***: There has to be at least one valid contact in the address book before running the tests
+
+1. Add a valid timing to a valid index for various distances
+    
+    1. Add a valid timing to a valid index for 2.4km distance
+       Test case: `addtiming 1 dist/2.4km min/10 sec/10`
+       Expected: The following success message should be displayed in the result display if using the addressbook.json sample above:
+       ```
+       Added timing for Irfan Ibrahim: 2.4km in 10min 10.0s
+       New personal best for 2.4km: 10min 10.0s
+       ```
+       Expected: Run the following command: `view 1`. The newly added timings should appear in the list of run timings for the athlete at that index
+
+    1. Add a valid timing to a valid index for 10km distance
+       Test case: `addtiming 1 dist/10km min/45 sec/30`
+       Expected: The following success message should be displayed in the result display if using the addressbook.json sample above:
+        ```
+       Added timing for Irfan Ibrahim: 10km in 45min 30.0s
+       New personal best for 10km: 45min 30.0s
+       ```
+       Expected: Run the following command: `view 1`. The newly added timings should appear in the list of run timings for the athlete at that index
+
+   1. Add a valid personal best timing to a valid index for a certain distance
+      Test case: `addtiming 1 dist/10km min/x sec/y`, where x mins y seconds is faster than all 10km timings run by the first index athlete in the person list panel
+      Expected: The following success message should be displayed in the result display if using the addressbook.json sample above:
+      ```
+      Added timing for Irfan Ibrahim: 10km in 41min 0.0s
+      New personal best for 10km: 41min 0.0s
+      ```
+
+1. Add an invalid timing to a valid index for 2.4km distance
+    
+    1. Use a negative number as the minutes
+       Test case: `addtiming 1 dist/2.4km min/-1 sec/0`
+       Expected: The following error message should be displayed in the result display:
+       `Invalid minutes: must be a non-negative integer`
+
+    1. Use a value over 60 for seconds field
+       Test case: `addtiming 1 dist/2.4km min/14 sec/61`
+       Expected: The following error message should be displayed in the result display:
+       `Invalid seconds: must be between 0 and 59.99`
+
+1. Add a valid timing to an invalid index for 2.4km distance
+
+    1. Use a negative athlete index
+       Test case: `addtiming -1 dist/10km min/45 sec/30` 
+
+    1. Use an athlete index that is larger than the number of athletes stored in Pacebook
+       Test case: `addtiming x dist/10km min/45 sec/30`, where x is greater than the number of athletes in Pacebook
+       Expected: The following error message should be displayed in the result display:
+       `The person index provided is invalid`
+
+1. Add a valid timing to a valid index for an invalid distance
+
+    1. Test case: `addtiming 1 dist/5km min/20 sec/10`
+       Expected: The following error message should be displayed in the result display:
+       `Distance must be one of: 2.4km, 400m, 10km, 42km`
+
+
+### Delete run timings
+***Note***: Before running the following tests, ensure that:
+1. A run timing exists for the athlete at the index that we are going to test, using the view command, or by manually modifying the addressbook.json file. Below is a sample addressbook.json that contains run timings for athlete Irfan Ibrahim:
+```json
+{
+  "persons" : [ {
+    "name" : "Irfan Ibrahim",
+    "age" : "20",
+    "phone" : "92492021",
+    "email" : "irfan@example.com",
+    "address" : "Blk 47 Tampines Street 20, #17-35",
+    "emergencyContact" : "Uncle 95678901",
+    "startDate" : "05/05/2005",
+    "tags" : [ "classmates" ],
+    "availableDays" : [ "Thu" ],
+    "timings" : [ {
+      "distance" : "10km",
+      "minutes" : 48,
+      "seconds" : 56.0
+    }, {
+      "distance" : "2.4km",
+      "minutes" : 9,
+      "seconds" : 30.0
+    }, {
+      "distance" : "10km",
+      "minutes" : 44,
+      "seconds" : 29.0
+    } ]
+  }, {
+    "name" : "Roy Balakrishnan",
+    "age" : "29",
+    "phone" : "92624417",
+    "email" : "royb@example.com",
+    "address" : "Blk 45 Aljunied Street 85, #11-31",
+    "emergencyContact" : "Aunt 96789012",
+    "startDate" : "06/06/2006",
+    "tags" : [ "colleagues" ],
+    "availableDays" : [ "Fri" ],
+    "timings" : [ ]
+  }, {
+    "name" : "Lucas Wong",
+    "age" : "20",
+    "phone" : "93579135",
+    "email" : "lucas.wong@example.com",
+    "address" : "27 Serangoon North Ave 4",
+    "emergencyContact" : "N/A",
+    "startDate" : "30/01/2024",
+    "tags" : [ "teamC" ],
+    "availableDays" : [ ],
+    "timings" : [ ]
+  } ]
+}
+```
+2. At least one athlete is on display on the person list panel, e.g. run the `list` command.
+
+
+1. Delete a valid run record index for a valid athlete index
+    1. Test case: `deletetiming x 1`, where x is a valid athlete index
+   
+       Expected: The following success message should be displayed in the result display, if using the addressbook.json sample:
+       `Deleted timing for Irfan Ibrahim: 10km in 45min 30.0s`
+   
+       Expected: Run the following command: `view x`, where x is the index that was previously entered. The run timings should include all the previous run timings after index `x` shifted up in the records by 1 position, and the run timing that corresponds to the index specified in the delete command should no longer appear in the list. 
+
+1. Delete a valid run record index for an invalid athlete index
+    1. Use an athlete index that is greater than the number of athletes stored in Pacebook
+       Test case: `deletetiming x 1`, where x is greater than the number of athletes stored in Pacebook
+       Expected: The following error message should be displayed in the result display:
+       `The person index provided is invalid`
+    2. Use an athlete index that is negative
+       Test case: `deletetiming x 1`, where x is a negative number
+       Expected: The following error message should be displayed in the result display:
+       ```
+       Invalid command format: deletetiming: Deletes a 2.4km run timing from the athlete identified by the index number.
+       Parameters: ATHLETE_INDEX TIMING_INDEX
+       Example: deletetiming 1 2
+       ```
+
+
+1. Delete an invalid run record index for a valid athlete index
+
+    1. Use a negative value run record index
+       Test case: `deletetiming 1 x`, where x is a negative number
+       Expected: The following error message should be displayed in the result display:
+       ```
+       Invalid command format: deletetiming: Deletes a 2.4km run timing from the athlete identified by the index number.
+       Parameters: ATHLETE_INDEX TIMING_INDEX
+       Example: deletetiming 1 2
+       ```
+
+    1. Use a run record index that is greater than the number of run records for that athlete
+       Test case: `deletetiming 1 x`, where x is greater than the number of run records for the athlete in index 1
+       Expected: The following error message should be displayed in the result display:
+       `The timing index provided is invalid.`
+
+
+### Viewing athlete profiles
+***Note***: All the tests below have the following common prerequisites:
+1. Multiple athlete profiles are stored in the addressbook.json
+
+
+1. View the profile of an athlete at a valid index when all the athletes are on the person list panel
+    1. Prerequisites: View list of all athletes by entering the `list` command.
+
+    1. Test case: `view 1`
+       Expected: The full profile of the athlete should be shown in the result display. This includes their run timing records
+       Sample of an athlete's full profile:
+       ![sample_full_profile](images/sample_full_profile.png)
+
+1. View the profile of an athlete at a valid index when only one athlete is on the person list panel
+    1. Prerequisites: Run the command `p/x`, where x is a valid full phone number of any athlete. This will output only
+       one athlete in the person list panel as no duplicate phone numbers are allowed.
+    
+    1. Test case: `viewathlete 1`
+       Expected: The full profile of the athlete should be shown in the result display. This includes their run timing records
+       
+1. View the profile of an athlete at an invalid index
+    1. Choose a negative index 
+       Test case: `viewathlete -1`
+       Expected: The following error message should be displayed in the result display:
+       ```
+       Invalid command format! 
+       viewathlete: Views the athlete identified by the index number used in the displayed person list.
+       Parameters: INDEX (must be a positive integer)
+       Example: viewathlete 1
+       ```
+
+    1. Choose an index greater than the number of athletes in the person list panel
+       Test case: `viewathlete x`, where x is an integer greater than the number of athletes displayed in the person list panel
+       Expected:
+       `The person index provided is invalid`
+
+### Sorting athletes
+***Note***: All the tests below have the following common prerequisites:
+1. Multiple athletes exist in the addressbook.json
+2. Each distance has to contain several athletes that run those distances, 
+e.g. 3 different athletes have a 2.4km time recorded, 5 different athletes have a 10km time recorded, etc.
+Testers may use the following addressbook.json that fulfills the above prerequisites for convenience:
+
+```json
+{
+  "persons": [
+    {
+      "name": "Amelia Tan",
+      "age": "18",
+      "phone": "91234567",
+      "email": "amelia.tan@example.com",
+      "address": "12 Tampines Street 11, #06-21",
+      "emergencyContact": "Mother 98765432",
+      "startDate": "05/01/2024",
+      "tags": [
+        "teamA",
+        "relay"
+      ],
+      "availableDays": [
+        "MON",
+        "WED",
+        "FRI"
+      ],
+      "timings": [
+        {
+          "distance": "400m",
+          "minutes": 1,
+          "seconds": 8.4
+        },
+        {
+          "distance": "2.4km",
+          "minutes": 9,
+          "seconds": 42.5
+        },
+        {
+          "distance": "10km",
+          "minutes": 47,
+          "seconds": 18.2
+        },
+        {
+          "distance": "42km",
+          "minutes": 228,
+          "seconds": 14.6
+        }
+      ]
+    },
+    {
+      "name": "Bryan Lee",
+      "age": "21",
+      "phone": "92345678",
+      "email": "bryan.lee@example.com",
+      "address": "34 Bedok North Avenue 4, #10-55",
+      "emergencyContact": "Father 97654321",
+      "startDate": "12/03/2023",
+      "tags": [
+        "teamB",
+        "endurance"
+      ],
+      "availableDays": [
+        "TUE",
+        "THU",
+        "SAT"
+      ],
+      "timings": [
+        {
+          "distance": "400m",
+          "minutes": 1,
+          "seconds": 3.9
+        },
+        {
+          "distance": "2.4km",
+          "minutes": 8,
+          "seconds": 55.7
+        },
+        {
+          "distance": "10km",
+          "minutes": 43,
+          "seconds": 50.3
+        },
+        {
+          "distance": "42km",
+          "minutes": 205,
+          "seconds": 41.8
+        }
+      ]
+    },
+    {
+      "name": "Chloe Ong",
+      "age": "17",
+      "phone": "93456789",
+      "email": "chloe.ong@example.com",
+      "address": "9 Pasir Ris Drive 6, #07-44",
+      "emergencyContact": "Aunt 96789012",
+      "startDate": "08/04/2026",
+      "tags": [
+        "school",
+        "sprinter"
+      ],
+      "availableDays": [
+        "FRI",
+        "SUN"
+      ],
+      "timings": [
+        {
+          "distance": "400m",
+          "minutes": 1,
+          "seconds": 0.8
+        },
+        {
+          "distance": "2.4km",
+          "minutes": 9,
+          "seconds": 30.0
+        },
+        {
+          "distance": "10km",
+          "minutes": 49,
+          "seconds": 5.4
+        },
+        {
+          "distance": "42km",
+          "minutes": 240,
+          "seconds": 22.9
+        }
+      ]
+    },
+    {
+      "name": "Daniel Goh",
+      "age": "24",
+      "phone": "94567890",
+      "email": "daniel.goh@example.com",
+      "address": "88 Jurong West Street 52, #11-03",
+      "emergencyContact": "Brother 95556666",
+      "startDate": "20/08/2022",
+      "tags": [
+        "captain",
+        "marathon"
+      ],
+      "availableDays": [
+        "MON",
+        "THU",
+        "SAT"
+      ],
+      "timings": [
+        {
+          "distance": "400m",
+          "minutes": 1,
+          "seconds": 12.6
+        },
+        {
+          "distance": "2.4km",
+          "minutes": 10,
+          "seconds": 4.1
+        },
+        {
+          "distance": "10km",
+          "minutes": 45,
+          "seconds": 27.6
+        },
+        {
+          "distance": "42km",
+          "minutes": 198,
+          "seconds": 35.2
+        }
+      ]
+    },
+    {
+      "name": "Farah Lim",
+      "age": "20",
+      "phone": "95678901",
+      "email": "farah.lim@example.com",
+      "address": "101 Bishan Street 12, #14-08",
+      "emergencyContact": "Sister 98887766",
+      "startDate": "14/11/2023",
+      "tags": [
+        "teamC",
+        "trail"
+      ],
+      "availableDays": [
+        "WED",
+        "FRI",
+        "SUN"
+      ],
+      "timings": [
+        {
+          "distance": "400m",
+          "minutes": 1,
+          "seconds": 6.1
+        },
+        {
+          "distance": "2.4km",
+          "minutes": 9,
+          "seconds": 12.8
+        },
+        {
+          "distance": "10km",
+          "minutes": 44,
+          "seconds": 11.7
+        },
+        {
+          "distance": "42km",
+          "minutes": 214,
+          "seconds": 48.5
+        }
+      ]
+    }
+  ]
+}
+```
+
+1. Sorting by name
+    1. Sort ascending
+       Test case: `sort by/name ord/asc`
+       Expected: The list of athletes is sorted by their names in alphabetical order from top to down (e.g. names starting with 'A' are at the top and names starting with 'Z' are at the bottom)
+       Expected: The following success message should be displayed in the result display:
+       `Sorted athletes by name in ascending order.`
+
+    2. Sort descending
+       Test case: `sort by/name order/desc`
+       Expected: The list of athletes is sorted by their names in reverse alphabetical order from top to down (e.g. names starting with 'Z' are at the top and names starting with 'A' are at the bottom)
+       Expected: The following success message should be displayed in the result display:
+       `Sorted athletes by name in descending order.`
+
+2. Sorting by PB (Personal Best)
+    1. Sort ascending
+       Test case: 
+       Expected: 
+
+    2. Sort descending
+       Test case:
+       Expected:
+
+
+2. Sorting using invalid distance field
+    1. Test case: 
+       Expected:
+
+2. Sorting using invalid order field
+    1. Test case: `sort by/pb order/asdf`
+       Expected: 
+
+
+### Clear Pacebook's address book
+1. Clearing when there are no athletes in addressbook.json
+   1. Prerequisites: addressbook.json is empty
+   
+   2. Test case: `clear`
+      Expected: The following success message should be displayed in the result display:
+      `Address book has been cleared!`
+      Expected: Entering `list` command will display an empty person list panel
+      Expected: After closing the window or running `exit` command, the addressbook.json will be an empty list
+
+2. Clearing when there are multiple athletes in addressbook.json
+    1. Prerequisites: addressbook.json contains multiple athletes. Use any of the addressbook.json samples above for convenience:
+   
+    1. Test case: `clear`
+       Expected: The following success message should be displayed in the result display:
+       `Address book has been cleared!`
+       Expected: Entering `list` command will display an empty person list panel
+       Expected: After closing the window or running `exit` command, the addressbook.json will be an empty list
+
+
+### Help command
+1. Entering the help command
+    1. Test case: `help`<br>
+       Expected: The result display should display the following:
+       ```
+       Commands summary:
+        ------------------------------------------------------
+        addathlete    n/NAME a/AGE p/PHONE e/EMAIL ad/ADDRESS d/START_DATE [t/TAG]... [av/AVAILABLE_DAY]...
+        addtiming     INDEX dist/DISTANCE min/MINUTES sec/SECONDS
+        deleteathlete INDEX
+        deletetiming  ATHLETE_INDEX TIMING_INDEX
+        edit          INDEX [n/NAME] [a/AGE] [p/PHONE] [e/EMAIL] [ad/ADDRESS] [d/START_DATE] [t/TAG]...
+        find          KEYWORD [n/NAME] [p/PHONE] [t/TAG]... [av/AVAILABLE_DAY]...
+        sort          by/FIELD [order/ORDER]   (fields: name, pb  |  orders: asc, desc)
+        viewathlete   INDEX
+        list
+        clear
+        exit
+        ------------------------------------------------------
+        For full details: https://ay2526s2-cs2103t-w14-4.github.io/tp/UserGuide.html
+       ```
+       <br>
+       There should be no changes to the person list panel
+    
+    
+### Exit
+1. Exiting the programme after no changes are made to the addressbook
+   1. Test case: `exit`
+      Expected: The programme window closes, and all modifications done to the addressbook should be reflected in addressbook.json
+       
+
+1. Exiting the programme after adding a new athlete to the address book with run times
+   1. Prerequisites: 
+      Run the following commands in order:
+      ```
+      addathlete n/Aryan Lim a/19 p/91827364 e/aryan.lim@example.com ad/18 Bedok North Street 3, #09-12 ec/Mother 91239876 d/12/03/2025 t/sprinter t/school av/Tue av/Thu
+      addtiming 4 dist/400m min/0 sec/54.32
+      addtiming 4 dist/2.4km min/9 sec/41.85
+      addtiming 4 dist/10km min/43 sec/27.50
+      ```
+   
+   1. Test case: `exit`
+      Expected: The addressbook.json should have Aryan Lim in it, with his personal information and 3 run records
 
 
 ### Saving data
