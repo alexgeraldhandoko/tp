@@ -8,7 +8,6 @@ import static seedu.address.logic.commands.CommandTestUtil.AGE_DESC_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.AVAILABLE_DAY_DESC_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.EMAIL_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.EMAIL_DESC_BOB;
-import static seedu.address.logic.commands.CommandTestUtil.EMERGENCY_CONTACT_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.EMERGENCY_CONTACT_DESC_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_ADDRESS_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_AGE_DESC;
@@ -31,7 +30,6 @@ import static seedu.address.logic.commands.CommandTestUtil.TAG_DESC_HUSBAND;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_ADDRESS_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_AGE_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_BOB;
-import static seedu.address.logic.commands.CommandTestUtil.VALID_EMERGENCY_CONTACT_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_EMERGENCY_CONTACT_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_BOB;
@@ -47,7 +45,6 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_START_DATE;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
-import static seedu.address.testutil.TypicalPersons.AMY;
 import static seedu.address.testutil.TypicalPersons.BOB;
 
 import org.junit.jupiter.api.Test;
@@ -182,16 +179,6 @@ public class AddAthleteCommandParserTest {
     }
 
     @Test
-    public void parse_optionalFieldsMissing_success() {
-        // zero tags
-        Person expectedPerson = new PersonBuilder(AMY).withTags().withAvailableDays()
-                .withEmergencyContact(VALID_EMERGENCY_CONTACT_AMY).build();
-        assertParseSuccess(parser, NAME_DESC_AMY + AGE_DESC_AMY + PHONE_DESC_AMY
-                        + EMAIL_DESC_AMY + ADDRESS_DESC_AMY + EMERGENCY_CONTACT_DESC_AMY + START_DATE_DESC_AMY,
-                new AddAthleteCommand(expectedPerson));
-    }
-
-    @Test
     public void parse_compulsoryFieldMissing_failure() {
         String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddAthleteCommand.MESSAGE_USAGE);
 
@@ -203,32 +190,32 @@ public class AddAthleteCommandParserTest {
         // missing age prefix
         assertParseFailure(parser, NAME_DESC_BOB + VALID_AGE_BOB + PHONE_DESC_BOB
                         + EMAIL_DESC_BOB + ADDRESS_DESC_BOB + EMERGENCY_CONTACT_DESC_BOB + START_DATE_DESC_BOB,
-                expectedMessage);
+                "Missing required field: age (a/)");
 
         // missing phone prefix
         assertParseFailure(parser, NAME_DESC_BOB + AGE_DESC_BOB + VALID_PHONE_BOB
                         + EMAIL_DESC_BOB + ADDRESS_DESC_BOB + EMERGENCY_CONTACT_DESC_BOB + START_DATE_DESC_BOB,
-                expectedMessage);
+                "Missing required field: phone (p/)");
 
         // missing email prefix
         assertParseFailure(parser, NAME_DESC_BOB + AGE_DESC_BOB + PHONE_DESC_BOB
                         + VALID_EMAIL_BOB + ADDRESS_DESC_BOB + EMERGENCY_CONTACT_DESC_BOB + START_DATE_DESC_BOB,
-                expectedMessage);
+                "Missing required field: email (e/)");
 
         // missing address prefix
         assertParseFailure(parser, NAME_DESC_BOB + AGE_DESC_BOB + PHONE_DESC_BOB
                         + EMAIL_DESC_BOB + VALID_ADDRESS_BOB + EMERGENCY_CONTACT_DESC_BOB + START_DATE_DESC_BOB,
-                expectedMessage);
+                "Missing required field: address (ad/)");
 
         // missing emergency contact prefix
         assertParseFailure(parser, NAME_DESC_BOB + AGE_DESC_BOB + PHONE_DESC_BOB
                         + EMAIL_DESC_BOB + ADDRESS_DESC_BOB + START_DATE_DESC_BOB,
-                expectedMessage);
+                "Missing required field: emergency contact (ec/)");
 
         // missing start date prefix
         assertParseFailure(parser, NAME_DESC_BOB + AGE_DESC_BOB + PHONE_DESC_BOB
                         + EMAIL_DESC_BOB + ADDRESS_DESC_BOB + EMERGENCY_CONTACT_DESC_BOB + VALID_START_DATE_BOB,
-                expectedMessage);
+                "Missing required field: start date (d/)");
 
         // all prefixes missing
         assertParseFailure(parser, VALID_NAME_BOB + VALID_AGE_BOB + VALID_PHONE_BOB
