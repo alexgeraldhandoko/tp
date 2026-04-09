@@ -174,12 +174,11 @@ These needs are built around the pace and demands of a real club coaching workfl
 
 Adds a new athlete to Pacebook.
 
-Format: `add n/NAME a/AGE p/PHONE e/EMAIL ad/ADDRESS d/START_DATE [ec/EMERGENCY_CONTACT] [t/TAG]… [av/AVAILABLE_DAY]…​`
+Format: `add n/NAME a/AGE p/PHONE e/EMAIL ad/ADDRESS d/START_DATE ec/EMERGENCY_CONTACT [t/TAG]… [av/AVAILABLE_DAY]…​`
 
 Example:
 * A new sprinter joins your team A after the open trial session:
-  * `add n/Sarah Tan a/24 p/91234567 e/sarah.tan@email.com 
-ad/Blk 12 Jurong West Ave 1, #05-12 d/01/04/2025 t/sprinter t/teamA`
+  * `add n/Sarah Tan a/24 p/91234567 e/sarah.tan@email.com ad/Blk 12 Jurong West Ave 1, #05-12 d/01/04/2025 ec/Jane Doe 81234567 t/sprinter t/teamA`
 
 <div markdown="block" class="alert alert-primary">:bulb: **Tips:**
 
@@ -187,7 +186,7 @@ ad/Blk 12 Jurong West Ave 1, #05-12 d/01/04/2025 t/sprinter t/teamA`
 - `AGE` must be a number between 10-99.
 - `PHONE` must be a valid Singapore phone number (i.e. 8 digits, starts with 8 or 9).
 - `EMAIL` must be a valid email, i.e. email@domain.
-- `EMERGENCY_CONTACT` can be any non-blank text, e.g. a name and number like `Jane Doe 91234567`. If omitted, it defaults to `N/A`.
+- `EMERGENCY_CONTACT` must be provided. It can be any non-blank text, e.g. a name and number like `Jane Doe 91234567`.
 - Avoid using vague names such as `John` if you coach multiple athletes with similar names.
 </div>
 
@@ -263,7 +262,7 @@ Examples:
 * The search is case-insensitive. e.g. `n/hans` will match `n/Hans`
 * You must provide at least one field to search.
 * The order of the search criteria does not matter. e.g. `n/Jessy t/captain` will match `t/captain n/Jessy`
-* Only full words will be matched. e.g. `Han` will not match `Hans`
+* Name and phone searches use partial matching. e.g. `Han` will match `Hans`, `find p/92` will match any phone number containing `92`.
 * Athletes must satisfy all the criteria.
   e.g. `n/Alex t/Marathoner` will return only the athlete with the names Alex and tag Marathoner
 * Use `list` to clear the search filter and display all the athletes in Pacebook.
@@ -598,7 +597,7 @@ Furthermore, certain edits can cause Pacebook to behave in unexpected ways if va
 
 | Action             | Format, Examples                                                                                                                                                                                                                       |
 |--------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Add Athlete**    | `add n/NAME a/AGE p/PHONE e/EMAIL ad/ADDRESS d/START_DATE [ec/EMERGENCY_CONTACT] [t/TAG]… [av/AVAILABLE_DAY]…​` <br> e.g., `add n/Sarah Tan a/24 p/91234567 e/sarah.tan@email.com ad/Blk 12 Jurong West Ave 1, #05-12 d/01/04/2025 t/sprinter t/teamA` |
+| **Add Athlete**    | `add n/NAME a/AGE p/PHONE e/EMAIL ad/ADDRESS d/START_DATE ec/EMERGENCY_CONTACT [t/TAG]… [av/AVAILABLE_DAY]…​` <br> e.g., `add n/Sarah Tan a/24 p/91234567 e/sarah.tan@email.com ad/Blk 12 Jurong West Ave 1, #05-12 d/01/04/2025 ec/Jane Doe 81234567 t/sprinter t/teamA` |
 | **Edit**           | `edit INDEX [n/NAME] [a/AGE] [p/PHONE] [e/EMAIL] [ad/ADDRESS] [d/START_DATE] [ec/EMERGENCY_CONTACT] [t/TAG]… [av/AVAILABLE_DAY]…​`<br> e.g., `edit 1 n/Marcus Lim e/marcus@email.com`                                                   |
 | **Find**           | `find [n/NAME] [p/PHONE] [t/TAG] [av/AVAILABLE_DAY]`<br> e.g., `find n/Sarah t/sprinter`                                                                                                                                               |
 | **List**           | `list`                                                                                                                                                                                                                                 |

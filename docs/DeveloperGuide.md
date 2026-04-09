@@ -149,90 +149,6 @@ Classes used by multiple components are in the `seedu.address.commons` package.
 
 This section describes some noteworthy details on how certain features are implemented.
 
-### \[Proposed\] Undo/redo feature
-
-#### Proposed Implementation
-
-The proposed undo/redo mechanism is facilitated by `VersionedAddressBook`. It extends `AddressBook` with an undo/redo history, stored internally as an `addressBookStateList` and `currentStatePointer`. Additionally, it implements the following operations:
-
-* `VersionedAddressBook#commit()` — Saves the current address book state in its history.
-* `VersionedAddressBook#undo()` — Restores the previous address book state from its history.
-* `VersionedAddressBook#redo()` — Restores a previously undone address book state from its history.
-
-These operations are exposed in the `Model` interface as `Model#commitAddressBook()`, `Model#undoAddressBook()` and `Model#redoAddressBook()` respectively.
-
-Given below is an example usage scenario and how the undo/redo mechanism behaves at each step.
-
-Step 1. The user launches the application for the first time. The `VersionedAddressBook` will be initialized with the initial address book state, and the `currentStatePointer` pointing to that single address book state.
-
-![UndoRedoState0](images/UndoRedoState0.png)
-
-Step 2. The user executes `delete 5` command to delete the 5th person in the address book. The `delete` command calls `Model#commitAddressBook()`, causing the modified state of the address book after the `delete 5` command executes to be saved in the `addressBookStateList`, and the `currentStatePointer` is shifted to the newly inserted address book state.
-
-![UndoRedoState1](images/UndoRedoState1.png)
-
-Step 3. The user executes `add n/David …​` to add a new person. The `add` command also calls `Model#commitAddressBook()`, causing another modified address book state to be saved into the `addressBookStateList`.
-
-![UndoRedoState2](images/UndoRedoState2.png)
-
-<div markdown="span" class="alert alert-info">:information_source: **Note:** If a command fails its execution, it will not call `Model#commitAddressBook()`, so the address book state will not be saved into the `addressBookStateList`.
-
-</div>
-
-Step 4. The user now decides that adding the person was a mistake, and decides to undo that action by executing the `undo` command. The `undo` command will call `Model#undoAddressBook()`, which will shift the `currentStatePointer` once to the left, pointing it to the previous address book state, and restores the address book to that state.
-
-![UndoRedoState3](images/UndoRedoState3.png)
-
-<div markdown="span" class="alert alert-info">:information_source: **Note:** If the `currentStatePointer` is at index 0, pointing to the initial AddressBook state, then there are no previous AddressBook states to restore. The `undo` command uses `Model#canUndoAddressBook()` to check if this is the case. If so, it will return an error to the user rather
-than attempting to perform the undo.
-
-</div>
-
-The following sequence diagram shows how an undo operation goes through the `Logic` component:
-
-![UndoSequenceDiagram](images/UndoSequenceDiagram-Logic.png)
-
-<div markdown="span" class="alert alert-info">:information_source: **Note:** The lifeline for `UndoCommand` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline reaches the end of diagram.
-
-</div>
-
-Similarly, how an undo operation goes through the `Model` component is shown below:
-
-![UndoSequenceDiagram](images/UndoSequenceDiagram-Model.png)
-
-The `redo` command does the opposite — it calls `Model#redoAddressBook()`, which shifts the `currentStatePointer` once to the right, pointing to the previously undone state, and restores the address book to that state.
-
-<div markdown="span" class="alert alert-info">:information_source: **Note:** If the `currentStatePointer` is at index `addressBookStateList.size() - 1`, pointing to the latest address book state, then there are no undone AddressBook states to restore. The `redo` command uses `Model#canRedoAddressBook()` to check if this is the case. If so, it will return an error to the user rather than attempting to perform the redo.
-
-</div>
-
-Step 5. The user then decides to execute the command `list`. Commands that do not modify the address book, such as `list`, will usually not call `Model#commitAddressBook()`, `Model#undoAddressBook()` or `Model#redoAddressBook()`. Thus, the `addressBookStateList` remains unchanged.
-
-![UndoRedoState4](images/UndoRedoState4.png)
-
-Step 6. The user executes `clear`, which calls `Model#commitAddressBook()`. Since the `currentStatePointer` is not pointing at the end of the `addressBookStateList`, all address book states after the `currentStatePointer` will be purged. Reason: It no longer makes sense to redo the `add n/David …​` command. This is the behavior that most modern desktop applications follow.
-
-![UndoRedoState5](images/UndoRedoState5.png)
-
-The following activity diagram summarizes what happens when a user executes a new command:
-
-<img src="images/CommitActivityDiagram.png" width="250" />
-
-#### Design considerations:
-
-**Aspect: How undo & redo executes:**
-
-* **Alternative 1 (current choice):** Saves the entire address book.
-  * Pros: Easy to implement.
-  * Cons: May have performance issues in terms of memory usage.
-
-* **Alternative 2:** Individual command knows how to undo/redo by
-  itself.
-  * Pros: Will use less memory (e.g. for `del`, just save the person being deleted).
-  * Cons: We must ensure that the implementation of each individual command are correct.
-
-_{more aspects and alternatives to be added}_
-
 ### \[Proposed\] Data archiving
 
 _{Explain here how the data archiving feature will be implemented}_
@@ -373,7 +289,7 @@ Actor: Coach
 
 MSS:
 
-1. Coach specifies keyword(s) to find athletes: `find 9123`
+1. Coach specifies keyword(s) to find athletes: `find n/Irfan`
 2. Pacebook displays success message and number of matching athletes found in the message box.
 3. Pacebook displays all athlete entries which match the specified keyword(s) within the main window.  
    Use case ends.
@@ -426,9 +342,9 @@ Actor: Coach
 
 MSS:
 
-1. Coach uses the `viewathlete` command to review the athlete's full training history before removal: `viewathlete 2`
+1. Coach uses the `view` command to review the athlete's full training history before removal: `view 2`
 2. Pacebook displays the athlete's full profile and training history.
-3. Coach uses the `deleteathlete` command to remove the profile: `del 2`
+3. Coach uses the `del` command to remove the profile: `del 2`
 4. Pacebook removes the athlete from the active squad list.
 5. Pacebook displays success message and deleted athlete's details in the message box.
 6. Updated athlete list is now visible in the main window.  
@@ -684,7 +600,7 @@ testers are expected to do more *exploratory* testing.
 
     1. Prerequisites: List all athletes using the `list` command.
 
-    1. Test case: `addathlete n/Muhammad Irfan a/24 p/92345678 e/irfan24@example.com ad/45 Tampines Street 81, #10-22 d/30/06/2023 ec/Father 93456789 t/marathon av/Sat`
+    1. Test case: `add n/Muhammad Irfan a/24 p/92345678 e/irfan24@example.com ad/45 Tampines Street 81, #10-22 d/30/06/2023 ec/Father 93456789 t/marathon av/Sat`
        
        Expected: The following success message is shown in the result display:
        `New person added: Muhammad Irfan; Age: 24; Phone: 92345678; Email: irfan24@example.com; Address: 45 Tampines Street 81, #10-22; Emergency Contact: Father 93456789; Start Date: 30/06/2023; Tags: [marathon]`
@@ -723,17 +639,17 @@ testers are expected to do more *exploratory* testing.
 
     1. Prerequisites: List all athlete using the `list` command before starting each test case.
 
-    1. Test case: `addathlete n/Chloe Ong n/Chris Ryan a/17 p/96543210 e/chloe.ong@example.com ad/9 Pasir Ris Drive 6, #07-44 d/08/04/2026 t/relay t/school av/Fri`
+    1. Test case: `add n/Chloe Ong n/Chris Ryan a/17 p/96543210 e/chloe.ong@example.com ad/9 Pasir Ris Drive 6, #07-44 d/08/04/2026 t/relay t/school av/Fri`
        
         Expected: The following should be displayed in the result display in red text colour:
        `Multiple values specified for the following single-valued field(s): n/`
    
-    1. Test case: `addathlete n/Chloe Ong a/17 p/965432100 e/chloe.ong@example.com ad/9 Pasir Ris Drive 6, #07-44 d/08/04/2026 t/relay t/school av/Fri`
+    1. Test case: `add n/Chloe Ong a/17 p/965432100 e/chloe.ong@example.com ad/9 Pasir Ris Drive 6, #07-44 d/08/04/2026 t/relay t/school av/Fri`
        
        Expected: The following should be displayed in the result display in red text colour:
        `Phone number must be exactly 8 digits and start with 8 or 9 (e.g. 91234567).`
 
-    1. Test case: `addathlete n/Chloe Ong a/17 p/96543210 e/chloe.ong@ ad/9 Pasir Ris Drive 6, #07-44 d/08/04/2026 t/relay t/school av/Fri`
+    1. Test case: `add n/Chloe Ong a/17 p/96543210 e/chloe.ong@ ad/9 Pasir Ris Drive 6, #07-44 d/08/04/2026 t/relay t/school av/Fri`
        
        Expected: The following should be displayed in the result display in red text colour:
        ```text 
@@ -807,7 +723,7 @@ testers are expected to do more *exploratory* testing.
 
     1. Prerequisites: List all athletes using the `list`command. Multiple athletes in the list.
 
-    1. Test case: `deleteathlete 1`<br>
+    1. Test case: `del 1`<br>
        Expected: The first contact is deleted from the list. Details of the deleted contact shown in the status message. Timestamp in the status bar is updated. When using the addressbook.json sample, the following is displayed on the result display:
        `Deleted athlete profile: Irfan Ibrahim; Age: 20; Phone: 92492021; Email: irfan@example.com; Address: Blk 47 Tampines Street 20, #17-35; Emergency Contact: Uncle 95678901; Start Date: 05/05/2005; Tags: [classmates]`
 
@@ -815,7 +731,7 @@ testers are expected to do more *exploratory* testing.
 
     1. Prerequisites: Find a single athlete to display on the person list panel using the find command. If using the addressbook.json sample above, run `find n/Lucas`
 
-    1. Test case: `deleteathlete 1`
+    1. Test case: `del 1`
        Expected: The contact in the first index of the displayed person list is deleted. The following message should appear in the result display:
        `Deleted athlete profile: Lucas Wong; Age: 20; Phone: 93579135; Email: lucas.wong@example.com; Address: 27 Serangoon North Ave 4; Emergency Contact: N/A; Start Date: 30/01/2024; Tags: [teamC]`
        When running `list` command, that contact should no longer appear on the person list panel
@@ -826,17 +742,17 @@ testers are expected to do more *exploratory* testing.
     1. Prerequisites: List all athletes using the `list`command. Multiple athletes in the list.
     
     1. Test case: Enter a negative index to delete:
-       `deleteathlete -1`
+       `del -1`
        Expected: The following error message should be displayed in the result display:
        ```
        Invalid command format! 
-       deleteathlete: Deletes the athlete profile identified by the index number used in the displayed athlete profile list.
+       del: Deletes the athlete profile identified by the index number used in the displayed athlete profile list.
        Parameters: INDEX (must be a positive integer)
-       Example: deleteathlete 1
+       Example: del 1
        ```
        
     1. Test case: Enter an index larger than the index of the last athlete in the person display list. If using the addressbook.json sample:
-       `deleteathlete 3`
+       `del 3`
        Expected: The following error message should be displayed in the result display:
        `The person index provided is invalid`
        
@@ -866,7 +782,7 @@ Expected: The result display should display number of persons listed.
 
     1. Find athlete by partial phone number
        Test case: `find p/92` if using sample addressbook.json or `find p/x`, where x is any partial phone number
-       Expected: All athletes whose phone number contains `x` as the prefix to their phone number, and only these athletes, should appear in the person list panel. 
+       Expected: All athletes whose phone number contains `x` as a substring, and only these athletes, should appear in the person list panel. 
 
 
 1. Find athlete by a tag
@@ -915,7 +831,7 @@ Expected: The result display should display number of persons listed.
 1. Add a valid timing to a valid index for various distances
     
     1. Add a valid timing to a valid index for 2.4km distance
-       Test case: `addtiming 1 dist/2.4km min/10 sec/10`
+       Test case: `addtime 1 dist/2.4km min/10 sec/10`
        Expected: The following success message should be displayed in the result display if using the addressbook.json sample above:
        ```
        Added timing for Irfan Ibrahim: 2.4km in 10min 10.0s
@@ -924,7 +840,7 @@ Expected: The result display should display number of persons listed.
        Expected: Run the following command: `view 1`. The newly added timings should appear in the list of run timings for the athlete at that index
 
     1. Add a valid timing to a valid index for 10km distance
-       Test case: `addtiming 1 dist/10km min/45 sec/30`
+       Test case: `addtime 1 dist/10km min/45 sec/30`
        Expected: The following success message should be displayed in the result display if using the addressbook.json sample above:
         ```
        Added timing for Irfan Ibrahim: 10km in 45min 30.0s
@@ -933,7 +849,7 @@ Expected: The result display should display number of persons listed.
        Expected: Run the following command: `view 1`. The newly added timings should appear in the list of run timings for the athlete at that index
 
    1. Add a valid personal best timing to a valid index for a certain distance
-      Test case: `addtiming 1 dist/10km min/x sec/y`, where x mins y seconds is faster than all 10km timings run by the first index athlete in the person list panel
+      Test case: `addtime 1 dist/10km min/x sec/y`, where x mins y seconds is faster than all 10km timings run by the first index athlete in the person list panel
       Expected: The following success message should be displayed in the result display if using the addressbook.json sample above:
       ```
       Added timing for Irfan Ibrahim: 10km in 41min 0.0s
@@ -943,28 +859,28 @@ Expected: The result display should display number of persons listed.
 1. Add an invalid timing to a valid index for 2.4km distance
     
     1. Use a negative number as the minutes
-       Test case: `addtiming 1 dist/2.4km min/-1 sec/0`
+       Test case: `addtime 1 dist/2.4km min/-1 sec/0`
        Expected: The following error message should be displayed in the result display:
        `Invalid minutes: must be a non-negative integer`
 
     1. Use a value over 60 for seconds field
-       Test case: `addtiming 1 dist/2.4km min/14 sec/61`
+       Test case: `addtime 1 dist/2.4km min/14 sec/61`
        Expected: The following error message should be displayed in the result display:
        `Invalid seconds: must be between 0 and 59.99`
 
 1. Add a valid timing to an invalid index for 2.4km distance
 
     1. Use a negative athlete index
-       Test case: `addtiming -1 dist/10km min/45 sec/30` 
+       Test case: `addtime -1 dist/10km min/45 sec/30` 
 
     1. Use an athlete index that is larger than the number of athletes stored in Pacebook
-       Test case: `addtiming x dist/10km min/45 sec/30`, where x is greater than the number of athletes in Pacebook
+       Test case: `addtime x dist/10km min/45 sec/30`, where x is greater than the number of athletes in Pacebook
        Expected: The following error message should be displayed in the result display:
        `The person index provided is invalid`
 
 1. Add a valid timing to a valid index for an invalid distance
 
-    1. Test case: `addtiming 1 dist/5km min/20 sec/10`
+    1. Test case: `addtime 1 dist/5km min/20 sec/10`
        Expected: The following error message should be displayed in the result display:
        `Distance must be one of: 2.4km, 400m, 10km, 42km`
 
@@ -1026,7 +942,7 @@ Expected: The result display should display number of persons listed.
 
 
 1. Delete a valid run record index for a valid athlete index
-    1. Test case: `deletetiming x 1`, where x is a valid athlete index
+    1. Test case: `deltime x 1`, where x is a valid athlete index
    
        Expected: The following success message should be displayed in the result display, if using the addressbook.json sample:
        `Deleted timing for Irfan Ibrahim: 10km in 45min 30.0s`
@@ -1035,32 +951,32 @@ Expected: The result display should display number of persons listed.
 
 1. Delete a valid run record index for an invalid athlete index
     1. Use an athlete index that is greater than the number of athletes stored in Pacebook
-       Test case: `deletetiming x 1`, where x is greater than the number of athletes stored in Pacebook
+       Test case: `deltime x 1`, where x is greater than the number of athletes stored in Pacebook
        Expected: The following error message should be displayed in the result display:
        `The person index provided is invalid`
     2. Use an athlete index that is negative
-       Test case: `deletetiming x 1`, where x is a negative number
+       Test case: `deltime x 1`, where x is a negative number
        Expected: The following error message should be displayed in the result display:
        ```
-       Invalid command format: deletetiming: Deletes a 2.4km run timing from the athlete identified by the index number.
+       Invalid command format: deltime: Deletes a 2.4km run timing from the athlete identified by the index number.
        Parameters: ATHLETE_INDEX TIMING_INDEX
-       Example: deletetiming 1 2
+       Example: deltime 1 2
        ```
 
 
 1. Delete an invalid run record index for a valid athlete index
 
     1. Use a negative value run record index
-       Test case: `deletetiming 1 x`, where x is a negative number
+       Test case: `deltime 1 x`, where x is a negative number
        Expected: The following error message should be displayed in the result display:
        ```
-       Invalid command format: deletetiming: Deletes a 2.4km run timing from the athlete identified by the index number.
+       Invalid command format: deltime: Deletes a 2.4km run timing from the athlete identified by the index number.
        Parameters: ATHLETE_INDEX TIMING_INDEX
-       Example: deletetiming 1 2
+       Example: deltime 1 2
        ```
 
     1. Use a run record index that is greater than the number of run records for that athlete
-       Test case: `deletetiming 1 x`, where x is greater than the number of run records for the athlete in index 1
+       Test case: `deltime 1 x`, where x is greater than the number of run records for the athlete in index 1
        Expected: The following error message should be displayed in the result display:
        `The timing index provided is invalid.`
 
@@ -1082,22 +998,22 @@ Expected: The result display should display number of persons listed.
     1. Prerequisites: Run the command `p/x`, where x is a valid full phone number of any athlete. This will output only
        one athlete in the person list panel as no duplicate phone numbers are allowed.
     
-    1. Test case: `viewathlete 1`
+    1. Test case: `view 1`
        Expected: The full profile of the athlete should be shown in the result display. This includes their run timing records
        
 1. View the profile of an athlete at an invalid index
     1. Choose a negative index 
-       Test case: `viewathlete -1`
+       Test case: `view -1`
        Expected: The following error message should be displayed in the result display:
        ```
        Invalid command format! 
-       viewathlete: Views the athlete identified by the index number used in the displayed person list.
+       view: Views the athlete identified by the index number used in the displayed person list.
        Parameters: INDEX (must be a positive integer)
-       Example: viewathlete 1
+       Example: view 1
        ```
 
     1. Choose an index greater than the number of athletes in the person list panel
-       Test case: `viewathlete x`, where x is an integer greater than the number of athletes displayed in the person list panel
+       Test case: `view x`, where x is an integer greater than the number of athletes displayed in the person list panel
        Expected:
        `The person index provided is invalid`
 
@@ -1322,7 +1238,7 @@ Testers may use the following addressbook.json that fulfills the above prerequis
        `Sorted athletes by name in ascending order.`
 
     2. Sort descending
-       Test case: `sort by/name order/desc`
+       Test case: `sort by/name ord/desc`
        Expected: The list of athletes is sorted by their names in reverse alphabetical order from top to down (e.g. names starting with 'Z' are at the top and names starting with 'A' are at the bottom)
        Expected: The following success message should be displayed in the result display:
        `Sorted athletes by name in descending order.`
@@ -1342,7 +1258,7 @@ Testers may use the following addressbook.json that fulfills the above prerequis
        Expected:
 
 2. Sorting using invalid order field
-    1. Test case: `sort by/pb order/asdf`
+    1. Test case: `sort by/pb ord/asdf`
        Expected: 
 
 
@@ -1373,14 +1289,14 @@ Testers may use the following addressbook.json that fulfills the above prerequis
        ```
        Commands summary:
         ------------------------------------------------------
-        addathlete    n/NAME a/AGE p/PHONE e/EMAIL ad/ADDRESS d/START_DATE [t/TAG]... [av/AVAILABLE_DAY]...
-        addtiming     INDEX dist/DISTANCE min/MINUTES sec/SECONDS
-        deleteathlete INDEX
-        deletetiming  ATHLETE_INDEX TIMING_INDEX
+        add           n/NAME a/AGE p/PHONE e/EMAIL ad/ADDRESS d/START_DATE ec/EMERGENCY_CONTACT [t/TAG]... [av/AVAILABLE_DAY]...
+        addtime       INDEX dist/DISTANCE min/MINUTES sec/SECONDS
+        del           INDEX
+        deltime       ATHLETE_INDEX TIMING_INDEX
         edit          INDEX [n/NAME] [a/AGE] [p/PHONE] [e/EMAIL] [ad/ADDRESS] [d/START_DATE] [t/TAG]...
         find          KEYWORD [n/NAME] [p/PHONE] [t/TAG]... [av/AVAILABLE_DAY]...
-        sort          by/FIELD [order/ORDER]   (fields: name, pb  |  orders: asc, desc)
-        viewathlete   INDEX
+        sort          by/FIELD [ord/ORDER]   (fields: name, pb  |  orders: asc, desc)
+        view          INDEX
         list
         clear
         exit
@@ -1401,10 +1317,10 @@ Testers may use the following addressbook.json that fulfills the above prerequis
    1. Prerequisites: 
       Run the following commands in order:
       ```
-      addathlete n/Aryan Lim a/19 p/91827364 e/aryan.lim@example.com ad/18 Bedok North Street 3, #09-12 ec/Mother 91239876 d/12/03/2025 t/sprinter t/school av/Tue av/Thu
-      addtiming 4 dist/400m min/0 sec/54.32
-      addtiming 4 dist/2.4km min/9 sec/41.85
-      addtiming 4 dist/10km min/43 sec/27.50
+      add n/Aryan Lim a/19 p/91827364 e/aryan.lim@example.com ad/18 Bedok North Street 3, #09-12 ec/Mother 91239876 d/12/03/2025 t/sprinter t/school av/Tue av/Thu
+      addtime 4 dist/400m min/0 sec/54.32
+      addtime 4 dist/2.4km min/9 sec/41.85
+      addtime 4 dist/10km min/43 sec/27.50
       ```
    
    1. Test case: `exit`
